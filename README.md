@@ -1,70 +1,99 @@
-# Getting Started with Create React App
+# JànguXayma AI
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### 📌 Plateforme intelligente d'évaluation automatisée des exercices de bases de données
 
-## Available Scripts
+## 🚀 Présentation
+JànguXayma AI est une plateforme intelligente permettant aux étudiants d'uploader leurs exercices en bases de données. Une IA analyse et corrige automatiquement leurs travaux, fournissant des feedbacks détaillés et des statistiques pour améliorer l’apprentissage.
 
-In the project directory, you can run:
+## 🛠 Technologies utilisées
 
-### `npm start`
+### Backend :
+- **Django** (Python) - Framework web
+- **PostgreSQL** - Base de données relationnelle
+- **DeepSeek AI (via Ollama)** - Moteur d’évaluation intelligente
+- **Django REST Framework (DRF)** - API REST
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Frontend :
+- **React** - Interface utilisateur dynamique
+- **TailwindCSS & DaisyUI** - UI moderne et responsive
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### DevOps & Déploiement :
+- **Docker** - Conteneurisation
+- **Amazon EC2** - Hébergement
+- **NGINX** - Serveur proxy
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🏗 Installation et Configuration
 
-### `npm run build`
+### 1️⃣ Cloner le projet
+```sh
+git clone https://github.com/janguXayma/backend.git
+cd backend
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 2️⃣ Backend - Django
+#### 📌 Configuration
+- **Créer et activer un environnement virtuel**
+```sh
+python -m venv venv
+source venv/bin/activate  # macOS/Linux
+venv\Scripts\activate  # Windows
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Installer les dépendances**
+```sh
+pip install -r requirements.txt
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Créer un fichier `.env` et copier celui de `.env.example`
+```sh
+cp .env.example .env
+```
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **Appliquer les migrations et lancer le serveur**
+```sh
+python manage.py makemigration
+python manage.py migrate
+python manage.py runserver
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 3️⃣ Frontend - React
+```sh
+cd frontend
+npm install
+npm start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 🔥 Fonctionnalités principales
+✅ Upload des fichiers SQL par les étudiants  
+✅ Correction automatique via IA  
+✅ Explication détaillée des erreurs  
+✅ Génération de statistiques sur les performances  
+✅ Interface moderne et intuitive  
+✅ Possibilité pour les professeurs d'affiner la correction  
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 🛠 Déploiement (Docker)
+- **Créer une image Docker et lancer le conteneur**
+```sh
+docker-compose up --build
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## 📜 Licence
+Ce projet est sous licence **ESP**.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+📩 **Contact :** 
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 🧑‍💻 Contributeurs
+Omar DIOP
+Mouhamed THIAM
+Nafissatou M SOW
+Mouhamed DIAHATE
+Ndeye Mareme GUEYE
