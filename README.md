@@ -93,7 +93,7 @@ Ce projet est sous licence **ESP**.
 
 ## 🧑‍💻 Contributeurs
 Omar DIOP
-Mouhamed THIAM
+Moustapha THIAM
 Nafissatou M SOW
 Mouhamed DIAHATE
 Ndeye Mareme GUEYE
