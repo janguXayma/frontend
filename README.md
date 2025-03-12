@@ -81,7 +81,7 @@ npm start
 ## 🛠 Déploiement (Docker)
 - **Créer une image Docker et lancer le conteneur**
 ```sh
-docker-compose up --build
+docker-compose up -d --build
 ```
 
 ---
