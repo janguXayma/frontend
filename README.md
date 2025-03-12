@@ -61,7 +61,7 @@ python manage.py runserver
 
 ### 3️⃣ Frontend - React
 ```sh
-cd frontend
+git clone https://github.com/janguXayma/frontend.git
 npm install
 npm start
 ```
