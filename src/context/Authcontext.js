@@ -1,9 +1,10 @@
-import {useEffect, createContext, useState,useNavigate} from 'react';
+import {useEffect, createContext, useState} from 'react';
 import {jwtDecode} from 'jwt-decode';
 import {useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 import APIURL from '../utils/apiUrl';
 import swal from "sweetalert2";
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
 export default AuthContext;
@@ -43,6 +44,10 @@ export const AuthProvider =({children}) =>{
                 position: "top-right",
                 timerProgressBar: true,
                 showConfirmButton: false,
+                width: "auto",
+                customClass: {
+                  popup: 'swal2-toast', 
+                }
               });
         },
         onError: (error) => {
@@ -62,6 +67,10 @@ export const AuthProvider =({children}) =>{
               position: "top-right",
               timerProgressBar: true,
               showConfirmButton: false,
+              width: "auto", 
+              customClass: {
+                popup: 'swal2-toast', 
+              }
             });
           },
     });
@@ -86,6 +95,10 @@ export const AuthProvider =({children}) =>{
             position: "top-right",
             timerProgressBar: true,
             showConfirmButton: false,
+            width: "auto", 
+              customClass: {
+                popup: 'swal2-toast', 
+              }
           });
         },
         onError: (error) => {
@@ -105,6 +118,10 @@ export const AuthProvider =({children}) =>{
             position: "top-right",
             timerProgressBar: true,
             showConfirmButton: false,
+            width: "auto", 
+              customClass: {
+                popup: 'swal2-toast', 
+              }
           });
         },
       });
@@ -123,6 +140,10 @@ export const AuthProvider =({children}) =>{
         position: "top-right",
         timerProgressBar: true,
         showConfirmButton: false,
+        width: "auto", 
+        customClass: {
+                popup: 'swal2-toast', 
+              }
         });
     };
 
@@ -148,7 +169,7 @@ export const AuthProvider =({children}) =>{
 
     return (
         <AuthContext.Provider value={contextData}>
-            {children ? null : children}
+            {children}
         </AuthContext.Provider>
     );
 
