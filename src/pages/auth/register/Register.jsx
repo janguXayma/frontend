@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import janguXayma from "../../../assets/janguXayma.png";
 import AuthContext from '../../../context/Authcontext';
+import GoogleRegisterComponent from '../google/GoogleRegisterComponent';
 
 const Register = () => {
     const [formData,setFormDate] = useState({
@@ -160,6 +161,10 @@ const Register = () => {
                   Se connecter
                 </a>
               </p>
+              {/*  Bouton de connexion avec Google */}
+              <div className="mt-4">
+                <GoogleRegisterComponent />
+              </div>
             </div>
           </div>
     
