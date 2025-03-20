@@ -4,6 +4,7 @@ import {Routes, Route} from 'react-router-dom';
 import Register from './pages/auth/register/Register';
 import Login from './pages/auth/login/Login';
 import Dashboard from './pages/dashboard/Dashboard';
+import Profile from './pages/profile/Profile';
 import ProtectedRoute from './utils/protectedRoute';
 import Onboarding from './pages/onboarding/Onboarding';
 
@@ -19,6 +20,7 @@ function App() {
               <Dashboard />
             </ProtectedRoute>
           } />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </AuthProvider>
 
