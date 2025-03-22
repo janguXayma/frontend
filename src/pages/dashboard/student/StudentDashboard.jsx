@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import  AuthContext from '../../../context/Authcontext';
 import { useLocation } from 'react-router-dom';
 import showAlert from '../../../utils/constants';
+import ClassManagement from '../../../components/classe/ClassManagement';
 
 export default function StudentDashboard() {
   const { user } = useContext(AuthContext)
@@ -17,6 +18,9 @@ export default function StudentDashboard() {
           <p>Votre role : {user.role}</p>
           <button  onClick={logoutUser} className="btn btn-soft btn-secondary px-3">logout !</button>   
         </div>
+      </div>
+      <div className="">
+        <ClassManagement />
       </div>
     </div>
   )
