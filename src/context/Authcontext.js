@@ -38,9 +38,17 @@ export const AuthProvider =({children}) =>{
         },
         onSuccess: (data) => {
             setAuthTokens(data);
-            setUser(jwtDecode(data.access));
+            const decodedToken = jwtDecode(data.access);
+            setUser(decodedToken);
             localStorage.setItem('authTokens', JSON.stringify(data));
-            navigate('/dashboard');
+            // Redirection vers le tableau de bord
+            if (decodedToken.role === 'student') {
+                navigate('/dashboard/student?sucess=true&&redirect=true');
+            }
+            else {
+                navigate('/dashboard/teacher?sucess=true&&redirect=true');
+            }
+            // navigate('/dashboard');
             showAlert("Login Success🚀✅", "success");
         },
         onError: (error) => {
