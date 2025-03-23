@@ -3,15 +3,18 @@ import axios from "axios";
 import APIURL from "../utils/apiUrl";
 import swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import showAlert from "../utils/constants";
 
 export const useClassServices = () => {
   const fetchClasses = useQuery({
     queryKey: ["classes"],
     queryFn: async () => {
+      const authTokens = JSON.parse(localStorage.getItem("authTokens"));
       const response = await axios.get(`${APIURL}/classes/`, {
         withCredentials: true,
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("authTokens")}`,
+          Authorization: `Bearer ${authTokens?.access}`,
+          Accept: "application/json",
         },
       });
       return response.data;
@@ -20,152 +23,118 @@ export const useClassServices = () => {
       console.log("Classes fetched successfully:", data);
     },
     onError: (error) => {
-      console.error("Error fetching classes:", error);
-      swal.fire({
-        icon: "error",
-        title: "Erreur",
-        text: "Impossible de récupérer les classes.",
-      });
+      showAlert("Erreur lors de la récupération des classes", "error");
     },
   });
 
   const createClass = useMutation({
     mutationFn: async (classData) => {
+      const authTokens = JSON.parse(localStorage.getItem("authTokens"));
       const response = await axios.post(`${APIURL}/classes/`, classData, {
         withCredentials: true,
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("authTokens")}`,
+          Authorization: `Bearer ${authTokens?.access}`,
+          Accept: "application/json",
         },
       });
       return response.data;
     },
     onSuccess: (data) => {
       console.log("Class created successfully:", data);
-      swal.fire({
-        icon: "success",
-        title: "Classe créée avec succès",
-        text: "La classe a été créée avec succès.",
-      });
+      showAlert("Classe créée avec succès", "success");
     },
     onError: (error) => {
       console.error("Error creating class:", error);
-      swal.fire({
-        icon: "error",
-        title: "Erreur",
-        text: "Impossible de créer la classe.",
-      });
+      showAlert("Erreur lors de la création de la classe", "error");
     },
   });
 
   const updateClass = useMutation({
     mutationFn: async ({ classId, classData }) => {
+      const authTokens = JSON.parse(localStorage.getItem("authTokens"));
       const response = await axios.put(`${APIURL}/classes/${classId}/`, classData, {
         withCredentials: true,
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("authTokens")}`,
+          Authorization: `Bearer ${authTokens?.access}`,
+          Accept: "application/json",
         },
       });
       return response.data;
     },
     onSuccess: (data) => {
       console.log("Class updated successfully:", data);
-      swal.fire({
-        icon: "success",
-        title: "Classe mise à jour avec succès",
-        text: "La classe a été mise à jour avec succès.",
-      });
+      showAlert("Classe mise à jour avec succès", "success");
     },
     onError: (error) => {
       console.error("Error updating class:", error);
-      swal.fire({
-        icon: "error",
-        title: "Erreur",
-        text: "Impossible de mettre à jour la classe.",
-      });
+      showAlert("Erreur lors de la mise à jour de la classe", "error");
     },
   });
 
   const deleteClass = useMutation({
     mutationFn: async (classId) => {
+      const authTokens = JSON.parse(localStorage.getItem("authTokens"));
       const response = await axios.delete(`${APIURL}/classes/${classId}/`, {
         withCredentials: true,
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("authTokens")}`,
+          Authorization: `Bearer ${authTokens?.access}`,
+          Accept: "application/json",
         },
       });
       return response.data;
     },
     onSuccess: (data) => {
       console.log("Class deleted successfully:", data);
-      swal.fire({
-        icon: "success",
-        title: "Classe supprimée avec succès",
-        text: "La classe a été supprimée avec succès.",
-      });
+      showAlert("Classe supprimée avec succès", "success");
     },
     onError: (error) => {
       console.error("Error deleting class:", error);
-      swal.fire({
-        icon: "error",
-        title: "Erreur",
-        text: "Impossible de supprimer la classe.",
-      });
+      showAlert("Erreur lors de la suppression de la classe", "error");
     },
   });
 
   const joinClass = useMutation({
-    mutationFn: async (joinCode) => {
-      const response = await axios.post(`${APIURL}/classes/join-class/`, { code_activation: joinCode }, {
+    mutationFn: async (codeActivation) => {
+      const authTokens = JSON.parse(localStorage.getItem("authTokens"));
+      const payload = { code_activation: codeActivation }; 
+      const response = await axios.post(`${APIURL}/classes/join-class/`, { code_activation: codeActivation }, {
         withCredentials: true,
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("authTokens")}`,
+          Authorization: `Bearer ${authTokens?.access}`,
+          Accept: "application/json",
         },
       });
       return response.data;
     },
     onSuccess: (data) => {
       console.log("Joined class successfully:", data);
-      swal.fire({
-        icon: "success",
-        title: "Classe rejointe avec succès",
-        text: "Vous avez rejoint la classe avec succès.",
-      });
+      showAlert("Classe joind avec succès", "success");
     },
     onError: (error) => {
       console.error("Error joining class:", error);
-      swal.fire({
-        icon: "error",
-        title: "Erreur",
-        text: "Impossible de rejoindre la classe.",
-      });
+      showAlert("Erreur lors de la tentative de rejoindre la classe", "error");
     },
   });
 
   const leaveClass = useMutation({
-    mutationFn: async (classId) => {
-      const response = await axios.post(`${APIURL}/classes/leave-class/${classId}/`, {}, {
+    mutationFn: async (code_activation) => {
+      const authTokens = JSON.parse(localStorage.getItem("authTokens"));
+      const response = await axios.post(`${APIURL}/classes/leave-class/`, {code_activation:code_activation}, {
         withCredentials: true,
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("authTokens")}`,
+          Authorization: `Bearer ${authTokens?.access}`,
+          Accept: "application/json",
         },
       });
       return response.data;
     },
     onSuccess: (data) => {
       console.log("Left class successfully:", data);
-      swal.fire({
-        icon: "success",
-        title: "Classe quittée avec succès",
-        text: "Vous avez quitté la classe avec succès.",
-      });
+      showAlert("Classe quittée avec succès", "success");
     },
     onError: (error) => {
-      console.error("Error leaving class:", error);
-      swal.fire({
-        icon: "error",
-        title: "Erreur",
-        text: "Impossible de quitter la classe.",
-      });
+      console.error("Error joining class:", error.response ? error.response.data : error.message);
+      showAlert("Erreur lors de la tentative de quitter la classe", "error");
     },
   });
 

@@ -1,6 +1,7 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import swal from "sweetalert2";
 import AuthContext from "../../context/Authcontext";
+import { useClassServices } from "../../services/useClassServices";
 
 const ClassManagement = () => {
   const { user } = useContext(AuthContext);
@@ -12,6 +13,15 @@ const ClassManagement = () => {
     description: "",
     code_activation: "",
   });
+  const {fetchClasses} =  useClassServices();
+  useEffect(()=> {
+    if(fetchClasses.isSuccess){
+        console.log("Classes fetched successfully:", fetchClasses.data);
+    }
+    if(fetchClasses.isError){
+        console.error("Error fetching classes:", fetchClasses.error);
+        }
+  },[fetchClasses.isSuccess,fetchClasses.isError])
 
   // Données statiques des classes
   const classes = [
@@ -25,33 +35,23 @@ const ClassManagement = () => {
         { id: 2, user: { username: "Bob" } },
       ],
     },
-    {
-      id: 2,
-      name: "Physique Quantique",
-      description: "Cours sur la physique quantique pour les étudiants avancés.",
-      code_activation: "5678",
-      students: [
-        { id: 3, user: { username: "Charlie" } },
-        { id: 4, user: { username: "David" } },
-      ],
-    },
   ];
 
   // Fonction de création de classe (statique)
-  const createClass = () => {
-    swal.fire("Classe créée avec succès", "", "success");
-    setShowCreateModal(false);
-  };
+//   const createClass = () => {
+//     swal.fire("Classe créée avec succès", "", "success");
+//     setShowCreateModal(false);
+//   };
 
   // Fonction de suppression de classe (statique)
-  const deleteClass = (id) => {
-    swal.fire("Classe supprimée", "", "success");
-  };
+//   const deleteClass = (id) => {
+//     swal.fire("Classe supprimée", "", "success");
+//   };
 
   // Fonction de quitter la classe (statique)
-  const leaveClass = (id) => {
-    swal.fire("Classe quittée", "", "success");
-  };
+//   const leaveClass = (id) => {
+//     swal.fire("Classe quittée", "", "success");
+//   };
 
   // Teacher View
   const renderTeacherClass = (classe) => (
@@ -76,7 +76,7 @@ const ClassManagement = () => {
           </button>
           <button
             className="btn btn-sm btn-ghost text-error"
-            onClick={() => deleteClass(classe.id)}
+            // onClick={() => deleteClass(classe.id)}
           >
             🗑️
           </button>
@@ -112,7 +112,7 @@ const ClassManagement = () => {
         </div>
         <button
           className="btn btn-sm btn-error"
-          onClick={() => leaveClass(classe.id)}
+        //   onClick={() => leaveClass(classe.id)}
         >
           Quitter
         </button>
@@ -128,6 +128,10 @@ const ClassManagement = () => {
       <h1 className="text-2xl font-bold mb-6">
         {user?.is_teacher ? "Gestion des Classes" : "Mes Classes"}
       </h1>
+      <div>
+      <h1>Test de Fetch Classes</h1>
+      <button onClick={() => fetchClasses.refetch()}>Rafraîchir les classes</button>
+    </div>
 
       {/* Actions Bar */}
       <div className="flex gap-4 my-6">
@@ -195,7 +199,7 @@ const ClassManagement = () => {
               <div className="modal-action">
                 <button
                   className="btn btn-primary"
-                  onClick={createClass}
+                //   onClick={createClass}
                 >
                   Valider
                 </button>

@@ -1,10 +1,18 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import AuthContext from '../../../context/Authcontext';
 import ClassManagement from '../../../components/classe/ClassManagement';
+import ClassList from '../../../components/classe/ClassList';
+import CreateClassModal from '../../../components/classe/CreateClassModal';
+import { useClassServices } from '../../../services/useClassServices';
 
 export default function TeacherDashboard() {
     const { user } = useContext(AuthContext)
     const {logoutUser} = useContext(AuthContext);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const { fetchClasses } = useClassServices();
+    const refreshClasses = () => {
+        fetchClasses.refetch();
+    }
   return (
     <div>
         <div>
@@ -17,8 +25,20 @@ export default function TeacherDashboard() {
         </div>
         </div>
         <div className="">
-            <ClassManagement />
+            <ClassList />
         </div>
+        <div className="mt-5">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="btn btn-primary"
+          >
+            Créer une classe
+        </button>
+            <CreateClassModal 
+            isOpen={isModalOpen}
+            onClose={()=>setIsModalOpen(false)}
+            refetchClasses={refreshClasses}/>
+      </div>
   </div>
   )
 }
