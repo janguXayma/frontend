@@ -6,6 +6,7 @@ import ClassManagement from '../../../components/classe/ClassManagement';
 import ClassList from '../../../components/classe/ClassList';
 import JoinClassModal from '../../../components/classe/JoinClassModal';
 import { useClassServices } from '../../../services/useClassServices';
+import Navbar from '../../../components/common/Navbar';
 
 export default function StudentDashboard() {
   const { user } = useContext(AuthContext)
@@ -17,20 +18,22 @@ export default function StudentDashboard() {
       }
 
   return (
-    <div> 
+    <div>
+      <div className="">
+        <Navbar />  
+      </div> 
       <div>
       <h1 className="text-2xl font-semibold text-center px-3">Tableau de bord Student</h1>
-        <div className="col d-flex ">
-          <p>Bienvenue {user.username}!</p>
-          <p>Votre email : {user.email}</p>
-          <p>Votre role : {user.role}</p>
-          <button  onClick={logoutUser} className="btn btn-soft btn-secondary px-3">logout !</button>   
+        <div className="flex flex-col md:flex-row items-center md:justify-between px-6 py-4 bg-white shadow-md rounded-lg mx-4">
+          <div className="text-center md:text-left">
+              <p className="text-lg font-semibold">Bienvenue {user.username}!</p>
+              <p>Email : {user.email}</p>
+              <p>Rôle : {user.role}</p>
+          </div>
+          {/* <button onClick={logoutUser} className="btn btn-secondary mt-3 md:mt-0">Déconnexion</button> */}
         </div>
       </div>
-      <div className="">
-        <ClassList/>
-      </div>
-      <div className="mt-4">
+      <div className="mt-4 text-center">
       <button
             onClick={() => setIsModalOpen(true)}
             className="btn btn-success"
@@ -41,6 +44,10 @@ export default function StudentDashboard() {
             isOpen={isModalOpen}
             onClose={()=>setIsModalOpen(false)}
             refetchClasses={refreshClasses}/>
+      </div>
+      {/* Liste des classes */}
+      <div className="grid w-full px-4 md:px-6 mt-6">
+        <ClassList/>
       </div>
     </div>
   )

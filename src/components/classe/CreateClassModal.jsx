@@ -19,17 +19,17 @@ const CreateClassModal = ({isOpen, onClose, refetchClasses}) => {
 
     return (
     <dialog open={isOpen} className="modal modal-bottom sm:modal-middle">
-      <div className="modal-box bg-base-100 shadow-xl">
-        <h3 className="font-bold text-2xl mb-4">Créer une nouvelle classe</h3>
+      <div className="modal-box bg-base-200 shadow-xl">
+        <h3 className="font-bold text-2xl mb-4 text-success">Créer une nouvelle classe</h3>
         <form onSubmit={handleCreateClass} className="space-y-4">
           <div className="form-control">
-            <label className="label">
+            {/* <label className="label">
               <span className="label-text">Nom de la classe</span>
-            </label>
+            </label> */}
             <input
               type="text"
               placeholder="Entrez le nom de la classe"
-              className="input input-bordered w-full"
+              className="input input-bordered input-secondary w-full"
               value={className}
               onChange={(e) => setClassName(e.target.value)}
               required
@@ -37,12 +37,12 @@ const CreateClassModal = ({isOpen, onClose, refetchClasses}) => {
           </div>
 
           <div className="form-control">
-            <label className="label">
+            {/* <label className="label">
               <span className="label-text">Description</span>
-            </label>
+            </label> */}
             <textarea
               placeholder="Entrez une description (optionnelle)"
-              className="textarea textarea-bordered w-full"
+              className="textarea textarea-bordered w-full textarea-primary"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}

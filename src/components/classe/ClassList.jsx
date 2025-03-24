@@ -7,7 +7,7 @@ const ClassList = () => {
   const { fetchClasses } = useClassServices();
 
   return (
-    <div className="p-6 bg-base-100 rounded-box">
+    <div className="p-6 bg-base-100 rounded-box cursor-pointer">
       {fetchClasses.isLoading ? (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
@@ -28,7 +28,7 @@ const ClassList = () => {
           {fetchClasses.data?.map((classe) => (
             <div
               key={classe.id}
-              className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300"
+              className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300 w-full"
             >
               <div className="card-body">
                 <div className="flex justify-between items-start">
@@ -65,6 +65,7 @@ const ClassList = () => {
           ))}
         </div>
       )}
+      {fetchClasses.data?.length === 0 && <p className="text-center">Aucune classe disponible.</p>}
     </div>
   );
 };

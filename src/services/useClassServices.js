@@ -111,8 +111,16 @@ export const useClassServices = () => {
       showAlert("Classe joind avec succès", "success");
     },
     onError: (error) => {
-      console.error("Error joining class:", error);
-      showAlert("Erreur lors de la tentative de rejoindre la classe", "error");
+      let messageError = "Une erreur est survenue";
+      if(error.response && error.response.data){
+        if(typeof error.response.data === "string"){
+          messageError = error.response.data;
+        }else if(typeof error.response.data === "object"){
+          messageError = Object.values(error.response.data).flat().join("\n");
+        }
+      }
+      // console.error("Error joining class:", error);
+      showAlert(`Erreur: ${messageError} `, "error");
     },
   });
 

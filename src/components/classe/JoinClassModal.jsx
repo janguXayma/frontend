@@ -20,16 +20,16 @@
         return (
         <dialog open={isOpen} className="modal modal-bottom sm:modal-middle">
         <div className="modal-box bg-base-100 shadow-xl">
-            <h3 className="font-bold text-2xl mb-4">Joindre une classe</h3>
+            <h3 className="font-bold text-2xl mb-4 text-success">Joindre une classe</h3>
             <form onSubmit={handleJoinClass} className="space-y-4">
             <div className="form-control">
-                <label className="label">
+                {/* <label className="label">
                 <span className="label-text">Code de la Classe</span>
-                </label>
+                </label> */}
                 <input
                 type="text"
-                placeholder="Entrez le nom de la classe"
-                className="input input-bordered w-full"
+                placeholder="Entrez le code d'activation de la classe"
+                className="input input-success input-bordered w-full"
                 value={codeActivation}
                 onChange={(e) => setCodeActivation(e.target.value)}
                 required
