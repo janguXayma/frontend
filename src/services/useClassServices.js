@@ -26,6 +26,7 @@ export const useClassServices = () => {
       showAlert("Erreur lors de la récupération des classes", "error");
     },
   });
+  
 
   const createClass = useMutation({
     mutationFn: async (classData) => {
@@ -155,3 +156,26 @@ export const useClassServices = () => {
     leaveClass,
   };
 };
+
+export const useFetchClassById = (classId) =>{
+  return useQuery({
+    queryKey: ["class", classId],
+    queryFn: async () => {
+      const authTokens = JSON.parse(localStorage.getItem("authTokens"));
+      const response = await axios.get(`${APIURL}/classes/${classId}/`, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${authTokens?.access}`,
+          Accept: "application/json",
+        },
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      console.log("Class fetched successfully:", data);
+    },
+    onError: (error) => {
+      showAlert("Erreur lors de la récupération de la classe", "error");
+    },
+  });
+}

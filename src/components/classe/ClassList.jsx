@@ -2,9 +2,11 @@ import React from "react";
 import { useClassServices } from "../../services/useClassServices";
 import { FiUsers, FiCode, FiCalendar, FiCopy } from "react-icons/fi";
 import CopyButton from "../common/CopyButton";
+import { useNavigate } from "react-router-dom";
 
 const ClassList = () => {
   const { fetchClasses } = useClassServices();
+  const navigate = useNavigate();
 
   return (
     <div className="p-6 bg-base-100 rounded-box cursor-pointer">
@@ -59,7 +61,9 @@ const ClassList = () => {
 
                 <div className="card-actions justify-end mt-4 mb-2 mx-5">
                   <CopyButton text={classe.code_activation} />
-                  <button className="btn btn-sm btn-primary">Voir la classe</button>
+                  <button className="btn btn-sm btn-primary"
+                    onClick={() => navigate(`/classes/${classe.id}`)}
+                  >Voir la classe</button>
                 </div>
               </div>
           ))}
