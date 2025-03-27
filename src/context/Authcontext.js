@@ -212,17 +212,12 @@ export const AuthProvider =({children}) =>{
     useEffect(()=>{
         if(authTokens){
             setUser(jwtDecode(authTokens.access));
-            const decodedToken = jwtDecode(authTokens.access);
-            const expiredTime = decodedToken.exp * 1000;
-            const timeout = expiredTime - Date.now() - 5000;
-            if(timeout > 0){
-                setTimeout(refreshToken, timeout);
-            }
-            else{
-                refreshToken.mutate();
-            }
-        }
-        setLoading(false);
+            const refreshinterval = setInterval(()=>{
+              refreshToken.mutate();
+            },300000);
+
+            return () => clearInterval(refreshinterval);
+          }
     }, [authTokens,loading]);
 
     return (

@@ -1,53 +1,82 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { useParams,Link, useNavigate } from "react-router-dom";
 import { useClassServices,useFetchClassById } from "../../services/useClassServices";
-import { FiUsers, FiCode, FiCalendar, FiUpload, FiFile, FiDownload, FiTrash2 } from 'react-icons/fi';
+import { FiUsers, FiCode, FiCalendar, FiUpload, FiFile, FiDownload, FiTrash2, FiArrowLeft } from 'react-icons/fi';
+import AuthContext from "../../context/Authcontext";
+import swal from "sweetalert2";
+import { useQueryClient } from "@tanstack/react-query";
 
 const ClassDetailPage = () => {
-  const [classData, setClassData] = useState({
-    id: "b1dd0123-c397-4254-a739-f87150021e42",
-    name: "Formalisme",
-    code_activation: "FFWU",
-    description: "formalisme",
-    students: [
-      { id: "a10b874d-2119-44e0-9766-ca78d79dbd85", name: "Étudiant 1" },
-      { id: "b20c985e-3220-55f1-0877-db89e90ecf96", name: "Étudiant 2" }
-    ],
-    created_at: "2025-03-23T00:39:30.422726Z",
-    updated_at: "2025-03-23T00:39:30.422726Z",
-    files: [
-      { id: 1, name: "Syllabus.pdf", size: "2.4 MB", date: "2025-03-23" },
-      { id: 2, name: "Exercices.docx", size: "1.2 MB", date: "2025-03-24" }
-    ]
-  });
-
+  const queryClient = useQueryClient();
+const { user } = useContext(AuthContext);
 const [selectedFile, setSelectedFile] = useState(null);
 const [newMessage, setNewMessage] = useState('');
-const { fetchClassById } = useClassServices();
+const [currentPage,setCurrentPage] = useState(1);
+const [loadingStudents, setLoadingStudents] = useState({});
 const { id } = useParams();
-const { data: classe, isLoading, isError } = useFetchClassById(id);
- if (isLoading) return <div className="text-center">Chargement...</div>;
- if (isError || !classe) return <div className="alert alert-error">Erreur lors du chargement</div>;
+const { data: classData, isLoading, isError, refetch } = useFetchClassById(id);
+const { leaveClass, removeStudent} = useClassServices();
 
-  const handleFileUpload = (e) => {
-    e.preventDefault();
-    if (selectedFile) {
-      const newFile = {
-        id: classData.files.length + 1,
-        name: selectedFile.name,
-        size: `${(selectedFile.size / 1024 / 1024).toFixed(1)} MB`,
-        date: new Date().toISOString().split('T')[0]
-      };
-      
-      setClassData({
-        ...classData,
-        files: [...classData.files, newFile]
-      });
-      
-      setSelectedFile(null);
-      e.target.reset();
-    }
-  };
+
+const studentsPerPage = 1;
+const students = classData?.students || [];
+const totalStudents = students.length;
+const totalPages = Math.ceil(totalStudents / studentsPerPage);
+const indexOfLastStudent = currentPage * studentsPerPage;
+const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
+const currentStudents = students.slice(indexOfFirstStudent, indexOfLastStudent); 
+const navigate = useNavigate();
+
+  // 🔹 Gestion des boutons de pagination
+  const nextPage = () => setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
+  const prevPage = () => setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
+  const homePath = user?.role === "teacher" ? "/dashboard/teacher" : "/dashboard/student";
+
+ if (isLoading) return <div className="text-center">Chargement...</div>;
+ if (isError || !classData) return (
+  <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="alert alert-error max-w-md mx-auto w-full shadow-lg">
+      <div className="flex">
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          className="stroke-current shrink-0 h-6 w-6 mr-2" 
+          fill="none" 
+          viewBox="0 0 24 24"
+        >
+          <path 
+            strokeLinecap="round" 
+            strokeLinejoin="round" 
+            strokeWidth="2" 
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" 
+          />
+        </svg>
+        <div>
+          <h3 className="font-bold text-xl mb-2">Erreur de chargement</h3>
+          <p className="text-sm">Nous n'avons pas pu charger les détails de la classe</p>
+        </div>
+      </div>
+      <div className="mt-4 text-center">
+        <Link 
+          to={homePath} 
+          className="btn btn-primary btn-sm inline-flex items-center gap-2"
+        >
+          <FiArrowLeft className="text-lg" />
+          Retour 
+        </Link>
+      </div>
+    </div>
+  </div>
+);
+
+
+ const handleFileUpload = (e) => {
+  e.preventDefault();
+  if (selectedFile) {
+    console.log("Fichier sélectionné pour l'upload:", selectedFile.name);
+    setSelectedFile(null);
+    e.target.reset();
+  }
+};
 
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
@@ -61,8 +90,87 @@ const { data: classe, isLoading, isError } = useFetchClassById(id);
     }
   };
 
+  const handleLeaveClass = () => {
+    swal.fire({
+      title: "Quitter la classe ?",
+      text: "Êtes-vous sûr de vouloir quitter cette classe ?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Oui, quitter",
+      cancelButtonText: "Annuler",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        leaveClass.mutate(
+           classData.code_activation,
+          {
+            onSuccess: () => {
+              swal.fire("Succès", "Vous avez quitté la classe.", "success");
+              navigate(homePath);
+            },
+            onError: () => {
+              swal.fire("Erreur", "Impossible de quitter la classe.", "error");
+            },
+          }
+        );
+      }
+    });
+  };
+
+  const handleRemoveStudent = (student_id)=>{
+    if(!student_id){
+      console.error("Erreur : student_id est undefined !");
+      return;
+    }
+    swal.fire({
+      title: "Retirer l'étudiant ?",
+      text: `Êtes-vous sûr de vouloir retirer ${student_id} ?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Oui, retirer",
+      cancelButtonText: "Annuler",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setLoadingStudents((prev)=>({ ...prev,[student_id]:true}));
+        removeStudent.mutate(
+          { 
+            code_activation: classData.code_activation, 
+            student_id: student_id 
+          },
+          { 
+            onSuccess: () => {
+              queryClient.invalidateQueries(["class", id]);
+              if(user?.student?.id === student_id){
+                navigate(homePath);
+              }
+              swal.fire("Succès", `Étudiant retiré avec succès.`, "success");
+            },
+            onError: () => {
+              swal.fire("Erreur", "Impossible de retirer l'étudiant.", "error");
+            },
+            onSettled:() => {
+              setLoadingStudents((prev) =>({ ...prev, [student_id]:false}));
+            }
+          }
+        );
+      }
+    });
+  }
+
   return (
     <div className="container mx-auto p-6">
+      {/* Breadcrumbs */}
+      <div className="breadcrumbs text-sm mb-4">
+        <ul>
+          <li><Link to={homePath}>Home</Link></li>
+          {/* <li><Link to="/classes">Classes</Link></li> */}
+          <li>{classData.name}</li>
+        </ul>
+      </div>
+
       {/* En-tête */}
       <div className="flex justify-between items-center mb-8">
         <div>
@@ -75,13 +183,34 @@ const { data: classe, isLoading, isError } = useFetchClassById(id);
               <FiUsers className="mr-1" /> {classData.students.length} étudiants
             </span>
             <span className="flex items-center">
-              <FiCalendar className="mr-1" /> 
+              <FiCalendar className="mr-1" />
               {new Date(classData.created_at).toLocaleDateString()}
             </span>
           </div>
         </div>
-        <button className="btn btn-primary">Gérer la classe</button>
+
+        {/* Conteneur des boutons alignés */}
+        <div className="flex space-x-4">
+          {user?.role === "teacher" && (
+            <button 
+              className="btn btn-outline btn-primary"
+              disabled={leaveClass.isLoading}
+            >
+              {leaveClass.isLoading ? "Déconnexion..." : "Gérer la classe"}
+            </button>
+          )}
+          {user?.role === "student" && (
+            <button 
+              className="btn btn-outline btn-error"
+              onClick={handleLeaveClass}
+              disabled={leaveClass.isLoading}
+            >
+              {leaveClass.isLoading ? "Déconnexion..." : "Quitter la classe"}
+            </button>
+          )}
+        </div>
       </div>
+
 
       {/* Description */}
       <div className="card bg-base-100 shadow-md mb-6">
@@ -91,24 +220,59 @@ const { data: classe, isLoading, isError } = useFetchClassById(id);
         </div>
       </div>
 
+
       {/* Grille principale */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Colonne de gauche - Étudiants */}
-        <div className="lg:col-span-1">
-          <div className="card bg-base-100 shadow-md">
-            <div className="card-body">
-              <h2 className="card-title">Étudiants inscrits</h2>
-              <div className="space-y-3">
-                {classData.students.map(student => (
+     {/* Section Étudiants */}
+      <div className="lg:col-span-1">
+        <div className="card bg-base-100 shadow-md">
+          <div className="card-body">
+            <h2 className="card-title">Étudiants inscrits</h2>
+
+            {/* 🔹 Liste paginée des étudiants */}
+            <div className="max-h-60 overflow-y-auto border border-gray-200 rounded-lg p-2">
+            {currentStudents.length > 0 ? (
+                currentStudents.map(student => ( // Use currentStudents here
                   <div key={student.id} className="flex items-center justify-between p-2 hover:bg-base-200 rounded-lg">
-                    <span>{student.name}</span>
-                    <button className="btn btn-xs btn-error">Retirer</button>
+                    <span>{student?.user?.username} ({student?.user?.email})</span>
+                    {user?.role==="teacher" &&(
+                      <button className="btn btn-xs btn-error text-white" 
+                        onClick={() => handleRemoveStudent(student.user.id)} 
+                        disabled={loadingStudents[student.user.id]}
+                      > 
+                        <FiTrash2/>
+                        {loadingStudents[student.user.id] ? "Suppression..." : "Retirer"}
+                      </button>
+                    )}
                   </div>
-                ))}
-              </div>
+                ))
+              ) : (
+                <p className="text-center text-gray-500">Aucun étudiant inscrit.</p>
+              )}
             </div>
+            {/* 🔹 Pagination avec DaisyUI */}
+            {totalStudents > studentsPerPage && (
+              <div className="join grid grid-cols-2 mt-4">
+                <button 
+                  className="join-item btn btn-primary"
+                  onClick={prevPage} 
+                  disabled={currentPage === 1}
+                >
+                  Précédent
+                </button>
+                <button 
+                  className="join-item btn btn-primary"
+                  onClick={nextPage} 
+                  disabled={currentPage === totalPages}
+                >
+                  Suivant
+                </button>
+              </div>
+            )}
           </div>
         </div>
+        </div>
+        {/* Section Messages */}
 
         {/* Colonne centrale - Fichiers */}
         <div className="lg:col-span-2">
@@ -142,28 +306,34 @@ const { data: classe, isLoading, isError } = useFetchClassById(id);
                     </tr>
                   </thead>
                   <tbody>
-                    {classData.files.map(file => (
-                      <tr key={file.id}>
-                        <td>
-                          <div className="flex items-center">
-                            <FiFile className="mr-2" />
-                            {file.name}
-                          </div>
-                        </td>
-                        <td>{file.size}</td>
-                        <td>{file.date}</td>
-                        <td>
-                          <div className="flex space-x-2">
-                            <button className="btn btn-xs btn-success">
-                              <FiDownload />
-                            </button>
-                            <button className="btn btn-xs btn-error">
-                              <FiTrash2 />
-                            </button>
-                          </div>
-                        </td>
+                    {classData.files && classData.files.length > 0 ? (
+                      classData.files.map(file => (
+                        <tr key={file.id}>
+                          <td>
+                            <div className="flex items-center">
+                              <FiFile className="mr-2" />
+                              {file.name}
+                            </div>
+                          </td>
+                          <td>{file.size || "N/A"}</td>
+                          <td>{file.date || "N/A"}</td>
+                          <td>
+                            <div className="flex space-x-2">
+                              <button className="btn btn-xs btn-success">
+                                <FiDownload />
+                              </button>
+                              <button className="btn btn-xs btn-error">
+                                <FiTrash2 />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="4" className="text-center text-gray-500">Aucun fichier disponible.</td>
                       </tr>
-                    ))}
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -174,26 +344,6 @@ const { data: classe, isLoading, isError } = useFetchClassById(id);
           <div className="card bg-base-100 shadow-md">
             <div className="card-body">
               <h2 className="card-title">Discussion</h2>
-              <div className="space-y-4 mb-4">
-                {/* Messages */}
-                <div className="chat chat-start">
-                  <div className="chat-header">
-                    Professeur
-                    <time className="text-xs opacity-50 ml-2">12:45</time>
-                  </div>
-                  <div className="chat-bubble">Bonjour à tous, bienvenue dans ce cours !</div>
-                </div>
-                
-                <div className="chat chat-end">
-                  <div className="chat-header">
-                    Vous
-                    <time className="text-xs opacity-50 ml-2">12:47</time>
-                  </div>
-                  <div className="chat-bubble">Merci professeur !</div>
-                </div>
-              </div>
-              
-              {/* Formulaire d'envoi de message */}
               <form onSubmit={handleSendMessage} className="flex gap-2">
                 <input
                   type="text"

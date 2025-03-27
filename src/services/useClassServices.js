@@ -147,6 +147,32 @@ export const useClassServices = () => {
     },
   });
 
+  const removeStudent = useMutation({
+    mutationFn: async (data) => {
+      const authTokens = JSON.parse(localStorage.getItem("authTokens"));
+      const response = await axios.post(`${APIURL}/classes/remove-student/`,
+        { 
+          code_activation:data.code_activation,
+          student_id:data.student_id},
+        {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${authTokens?.access}`,
+          Accept: "application/json",
+        },
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      console.log("Student removed successfully:", data);
+      showAlert("Etudiant supprimé avec succès", "success");
+    },
+    onError: (error) => {
+      console.error("Error removing student:", error);
+      showAlert("Erreur lors de la suppression de l'étudiant", "error");
+    },
+  })
+
   return {
     fetchClasses,
     createClass,
@@ -154,6 +180,7 @@ export const useClassServices = () => {
     deleteClass,
     joinClass,
     leaveClass,
+    removeStudent,
   };
 };
 
