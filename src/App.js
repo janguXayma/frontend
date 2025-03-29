@@ -7,23 +7,41 @@ import Dashboard from './pages/dashboard/Dashboard';
 import Profile from './pages/profile/Profile';
 import ProtectedRoute from './utils/protectedRoute';
 import Onboarding from './pages/onboarding/Onboarding';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import StudentDashboard from './pages/dashboard/student/StudentDashboard';
+import TeacherDashboard from './pages/dashboard/teacher/TeacherDashboard';
+import ClassDetail from './components/classe/ClassDetail';
+import ClassDetailPage from './components/classe/ClassDetail';
 
 function App() {
+  const GOOGLE_CLIENT_ID = "1039352446446-gidvsi4pjl47oe79815df6tun0vtkgfl.apps.googleusercontent.com";
   return (
-      <AuthProvider>
-        <Routes>
-          <Route path="/" element={<Onboarding />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } />
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<Onboarding />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            {/* <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } /> */}
+            <Route path="/dashboard/student" element={
+              <ProtectedRoute>
+                <StudentDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/teacher" element={
+              <ProtectedRoute>
+                <TeacherDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/classes/:id" element={<ClassDetailPage />} />
           <Route path="/profile" element={<Profile />} />
-        </Routes>
-      </AuthProvider>
-
+          </Routes>
+        </AuthProvider>
+      </GoogleOAuthProvider>
   );
 }
 
