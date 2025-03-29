@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.logo {
+  width: 120px;
+  height: auto; /* Garde les proportions */
+}
+
+.btn-vert {
+  background-color: #10B981; /* Vert spécifique */
+  color: white;
+}
+
+.btn-vert:hover {
+  background-color: #059669; /* Vert plus foncé au survol */
+}
