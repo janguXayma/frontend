@@ -1,0 +1,5 @@
+react-icons
+react-feather
+@react-oauth/google
+react-router-dom
+lucide-react

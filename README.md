@@ -63,6 +63,10 @@ python manage.py runserver
 ```sh
 git clone https://github.com/janguXayma/frontend.git
 npm install
+
+- **installer les dépendances**
+xargs npm install < requirements.txt
+
 npm start
 ```
 
