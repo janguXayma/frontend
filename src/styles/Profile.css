@@ -1,0 +1,66 @@
+/* StudentProfile.css */
+
+body {
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .logo {
+    height: 40px;
+  }
+  
+  .bg-brand-600 {
+    color: #2563EB;
+  }
+  
+  .bg-brand-100 {
+    background-color: #DBEAFE;
+  }
+  
+  .text-brand-600 {
+    color: #2563EB;
+  }
+  
+  .text-brand-700 {
+    color: #1D4ED8;
+  }
+  
+  button {
+    transition: all 0.2s;
+  }
+  
+  button:hover {
+    transform: scale(1.05);
+  }
+  
+  nav {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .shadow-md {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .rounded-lg {
+    border-radius: 0.5rem;
+  }
+  
+  .grid {
+    display: grid;
+  }
+  
+  .grid-cols-1 {
+    grid-template-columns: 1fr;
+  }
+  
+  .mt-1 {
+    margin-top: 0.25rem;
+  }
+  
+  .mb-6 {
+    margin-bottom: 1.5rem;
+  }
+  
+  .p-6 {
+    padding: 1.5rem;
+  }
+  
