@@ -173,6 +173,29 @@ export const useClassServices = () => {
     },
   })
 
+  const profileUser = useQuery({
+    queryKey: ["studentProfile"],
+    queryFn: async () => {
+      const authTokens = JSON.parse(localStorage.getItem("authTokens"));
+      const response = await axios.get(`${APIURL}/profile/`, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${authTokens?.access}`,
+          Accept: "application/json",
+        },
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      console.log("Student profile fetched successfully:", data);
+    },
+    onError: (error) => {
+      console.error("Error fetching student profile:", error);
+      showAlert("Erreur lors de la récupération du profil de l'étudiant", "error");
+    },
+  });
+  
+
   return {
     fetchClasses,
     createClass,
@@ -181,6 +204,7 @@ export const useClassServices = () => {
     joinClass,
     leaveClass,
     removeStudent,
+    profileUser
   };
 };
 
