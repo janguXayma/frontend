@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useClassServices } from "../../services/useClassServices";
 import { Plus } from "react-feather"; // Assuming you're using react-feather for icons
 
+
 const CreateClassModal = ({ isOpen, onClose, refetchClasses }) => {
   const { createClass } = useClassServices();
   const [className, setClassName] = useState("");

@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom'; // Ajout du hook useNavigate
 import { Database, GraduationCap, Feather as Teacher, ArrowRight, CheckCircle, FileCheck } from 'lucide-react';
 import '../../styles/Onboarding.css';
+import '../../components/classe/Navbar';
 
 const Onboarding = () => {
   const navigate = useNavigate();  // Initialisation du hook useNavigate
