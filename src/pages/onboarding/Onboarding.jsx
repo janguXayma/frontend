@@ -13,7 +13,7 @@ const Onboarding = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center">
-              <img src="/logo.png" alt="Logo" className="logo" />
+            <Database className="h-8 w-8 text-teal-500" />
               <span className="ml-2 text-xl font-semibold text-gray-900">janguXayma</span>
               <span className="ml-2 text-sm text-brand-600">Smart Database Evaluation</span>
             </div>

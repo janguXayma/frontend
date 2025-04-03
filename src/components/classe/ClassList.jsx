@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { useClassServices } from "../../services/useClassServices";
 import { FiUsers, FiCalendar } from "react-icons/fi";
-import { FileText, Plus } from "lucide-react";
+import { FileText, Plus, BookOpen, Send, CheckCircle, BarChart3 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const ClassList = ({ setShowJoinModal, setCurrentClass }) => {
+const ClassList = ({ setShowJoinModal }) => {
   const { fetchClasses } = useClassServices();
   const navigate = useNavigate();
+  const [currentClass, setCurrentClass] = useState(null);
 
   const handleReload = () => {
     fetchClasses.refetch();
@@ -14,8 +15,6 @@ const ClassList = ({ setShowJoinModal, setCurrentClass }) => {
 
   return (
     <div className="mb-8">
-      <div className="flex justify-between items-center mb-6">
-      </div>
 
       {fetchClasses.isLoading ? (
         <div className="space-y-4">
@@ -37,7 +36,8 @@ const ClassList = ({ setShowJoinModal, setCurrentClass }) => {
           {fetchClasses.data?.map((classItem) => (
             <div
               key={classItem.id}
-              className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition"
+              className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer"
+              onClick={() => setCurrentClass(classItem)}
             >
               <div className="flex justify-between text-sm text-gray-500">
                 <div className="flex items-center gap-2">
@@ -50,7 +50,6 @@ const ClassList = ({ setShowJoinModal, setCurrentClass }) => {
                 </div>
               </div>
 
-              {/* Remplacement de l'icône par FileText */}
               <div className="flex items-center space-x-4 mb-4 mt-4">
                 <FileText className="h-8 w-8 text-teal-500" />
                 <div>
@@ -61,16 +60,84 @@ const ClassList = ({ setShowJoinModal, setCurrentClass }) => {
 
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm text-gray-500">Code: {classItem.code_activation}</span>
-                <button
-                  onClick={() => navigate(`/classes/${classItem.id}`)}
-                  className="text-teal-600 hover:text-teal-700 font-medium"
-                >
+                <button className="text-teal-600 hover:text-teal-700 font-medium">
                   Accéder →
                 </button>
               </div>
             </div>
           ))}
         </div>
+      )}
+
+      {/* Dashboard Content */}
+      {currentClass && (
+        <>
+          <h2 className="text-2xl font-bold text-gray-900 my-8">Tableau de Bord - {currentClass.name}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Consulter Sujets Examens */}
+            <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition">
+              <div className="flex items-center space-x-4 mb-4">
+                <BookOpen className="h-8 w-8 text-teal-500" />
+                <h2 className="text-xl font-semibold text-gray-900">Sujets d'Examens</h2>
+              </div>
+              <p className="text-gray-600 mb-4">Accédez à tous vos sujets d'examens et exercices disponibles.</p>
+              <button
+                  onClick={() => navigate(`/classes/${currentClass.id}`)}
+                  className="text-teal-600 hover:text-teal-700 font-medium"
+                >
+                  Voir les sujets →
+                </button>
+            </div>
+
+            {/* Soumettre Réponse */}
+            <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition">
+              <div className="flex items-center space-x-4 mb-4">
+                <Send className="h-8 w-8 text-teal-500" />
+                <h2 className="text-xl font-semibold text-gray-900">Soumettre Réponse</h2>
+              </div>
+              <p className="text-gray-600 mb-4">Soumettez vos réponses aux exercices et examens.</p>
+              <button className="text-teal-600 hover:text-teal-700 font-medium">
+                Soumettre →
+              </button>
+            </div>
+
+            {/* Consulter Réclamation */}
+            <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition">
+              <div className="flex items-center space-x-4 mb-4">
+                <FileText className="h-8 w-8 text-teal-500" />
+                <h2 className="text-xl font-semibold text-gray-900">Mes Réclamations</h2>
+              </div>
+              <p className="text-gray-600 mb-4">Consultez vos réponses soumises et leur statut.</p>
+              <button className="text-teal-600 hover:text-teal-700 font-medium">
+                Voir les réponses →
+              </button>
+            </div>
+
+            {/* Consulter Notes */}
+            <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition">
+              <div className="flex items-center space-x-4 mb-4">
+                <CheckCircle className="h-8 w-8 text-teal-500" />
+                <h2 className="text-xl font-semibold text-gray-900">Mes Notes</h2>
+              </div>
+              <p className="text-gray-600 mb-4">Visualisez vos notes et évaluations.</p>
+              <button className="text-teal-600 hover:text-teal-700 font-medium">
+                Voir les notes →
+              </button>
+            </div>
+
+            {/* Statistiques */}
+            <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition">
+              <div className="flex items-center space-x-4 mb-4">
+                <BarChart3 className="h-8 w-8 text-teal-500" />
+                <h2 className="text-xl font-semibold text-gray-900">Statistiques</h2>
+              </div>
+              <p className="text-gray-600 mb-4">Analysez vos performances et votre progression.</p>
+              <button className="text-teal-600 hover:text-teal-700 font-medium">
+                Voir les statistiques →
+              </button>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );
