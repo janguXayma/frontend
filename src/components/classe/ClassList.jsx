@@ -1,18 +1,22 @@
 import React from "react";
 import { useClassServices } from "../../services/useClassServices";
-import { FiUsers, FiCode, FiCalendar, FiCopy } from "react-icons/fi";
-import CopyButton from "../common/CopyButton";
+import { FiUsers, FiCalendar } from "react-icons/fi";
+import { FileText, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const ClassList = () => {
+const ClassList = ({ setShowJoinModal, setCurrentClass }) => {
   const { fetchClasses } = useClassServices();
   const navigate = useNavigate();
-  const handleReload = ()=>{
+
+  const handleReload = () => {
     fetchClasses.refetch();
-  }
+  };
 
   return (
-    <div className="p-6 bg-base-100 rounded-box cursor-pointer">
+    <div className="mb-8">
+      <div className="flex justify-between items-center mb-6">
+      </div>
+
       {fetchClasses.isLoading ? (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
@@ -21,61 +25,53 @@ const ClassList = () => {
         </div>
       ) : fetchClasses.isError ? (
         <div className="alert alert-error shadow-lg">
-          <div>
-            <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span>Erreur lors du chargement des classes </span>
-            <button className="btn btn-sm btn-primary ml-4" onClick={handleReload}>
-              Recharger
-            </button>
-          </div>
+          <span>Erreur lors du chargement des classes</span>
+          <button className="btn btn-sm btn-primary ml-4" onClick={handleReload}>
+            Recharger
+          </button>
         </div>
+      ) : fetchClasses.data?.length === 0 ? (
+        <p className="text-center">Aucune classe disponible.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {fetchClasses.data?.map((classe) => (
+          {fetchClasses.data?.map((classItem) => (
             <div
-              key={classe.id}
-              className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300 w-full"
+              key={classItem.id}
+              className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition"
             >
-              <div className="card-body">
-                <div className="flex justify-between items-start">
-                  <h2 className="card-title text-xl text-accent">{classe.name}</h2>
-                  <div className="badge badge-info gap-2">
-                    <FiCode className="w-4 h-4" />
-                    {classe.code_activation}
-                  </div>
+              <div className="flex justify-between text-sm text-gray-500">
+                <div className="flex items-center gap-2">
+                  <FiUsers className="w-4 h-4 text-teal-500" />
+                  <span>{classItem.students?.length || 0} Étudiants</span>
                 </div>
-
-                {/* <p className="text-base-content/70 mb-4">
-                  {classe.description || "Aucune description fournie"}
-                </p> */}
-                </div>
-
-                <div className="flex flex-wrap gap-4 text-sm">
-                  <div className="flex items-center gap-2 px-2">
-                    <FiUsers className="w-5 h-5 text-primary" />
-                    <span>{classe.students.length} Étudiants</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <FiCalendar className="w-5 h-5 text-secondary" />
-                    <span>
-                      {new Date(classe.created_at).toLocaleDateString()}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="card-actions justify-end mt-4 mb-2 mx-5">
-                  <CopyButton text={classe.code_activation} />
-                  <button className="btn btn-sm btn-primary"
-                    onClick={() => navigate(`/classes/${classe.id}`)}
-                  >Voir la classe</button>
+                <div className="flex items-center gap-2">
+                  <FiCalendar className="w-4 h-4 text-teal-500" />
+                  <span>{new Date(classItem.created_at).toLocaleDateString()}</span>
                 </div>
               </div>
+
+              {/* Remplacement de l'icône par FileText */}
+              <div className="flex items-center space-x-4 mb-4 mt-4">
+                <FileText className="h-8 w-8 text-teal-500" />
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">{classItem.name}</h3>
+                  <p className="text-sm text-gray-500">{classItem.professor || "Professeur inconnu"}</p>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm text-gray-500">Code: {classItem.code_activation}</span>
+                <button
+                  onClick={() => navigate(`/classes/${classItem.id}`)}
+                  className="text-teal-600 hover:text-teal-700 font-medium"
+                >
+                  Accéder →
+                </button>
+              </div>
+            </div>
           ))}
         </div>
       )}
-      {fetchClasses.data?.length === 0 && <p className="text-center">Aucune classe disponible.</p>}
     </div>
   );
 };
