@@ -25,6 +25,7 @@ import JoinClassModal from '../../../components/classe/JoinClassModal';
 import Sidebar from '../../../components/classe/Sidebar';
 import ThemeToggle from '../../../components/common/ThemeToggle';
 import Profile from '../../profile/Profile';
+import Agenda from '../../agenda/Agenda';
 
 function StudentDashboard() {
   const { user, logoutUser } = useContext(AuthContext);
@@ -58,18 +59,40 @@ function StudentDashboard() {
           <div className="p-6 bg-base-100 rounded-xl shadow-sm">
             <h2 className="text-2xl font-bold text-base-content mb-4">Agenda</h2>
             <p className="text-base-content/70">Votre calendrier et vos événements à venir.</p>
-          </div>
-        );
-      case 'parametres':
-        return (
-          <div className="p-6 bg-base-100 rounded-xl shadow-sm">
-            <h2 className="text-2xl font-bold text-base-content mb-4">Paramètres</h2>
-            <p className="text-base-content/70">Gérez vos préférences et paramètres du compte.</p>
-            <div className="flex justify-end">
-              <ThemeToggle />
+            <div className="">
+              <Agenda/>
             </div>
           </div>
         );
+        case 'parametres':
+          return (
+            <div className="p-6 bg-base-100 rounded-xl shadow-md space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-3xl font-semibold text-base-content">Paramètres</h2>
+                  <p className="text-base-content/70 mt-1">
+                    Personnalisez votre expérience et ajustez vos préférences de compte.
+                  </p>
+                </div>
+                <ThemeToggle />
+              </div>
+        
+              <div className="divider" />
+        
+              <div className="space-y-4">
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Langue</span>
+                  </label>
+                  <select className="select select-bordered w-full max-w-sm select-accent mx-3">
+                    <option value="fr">Français</option>
+                    {/* <option value="en">Anglais</option> */}
+                  </select>
+                </div>
+              </div>
+            </div>
+          );
+        
       case 'profile':
           return (
             <div className="bg-base-100 rounded-xl shadow-sm">
@@ -97,7 +120,7 @@ function StudentDashboard() {
                 <h2 className="text-2xl font-bold text-base-content mb-8">Tableau de Bord</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {/* Consulter Sujets Examens */}
-                  <div className="bg-base-100 p-6 rounded-xl shadow-sm hover:shadow-md transition">
+                  <div className="bg-base-100 p-6 rounded-xl shadow-md hover:shadow-md transition shadow-teal-300">
                     <div className="flex items-center space-x-4 mb-4">
                       <BookOpen className="h-8 w-8 text-teal-500" />
                       <h2 className="text-xl font-semibold text-base-content">Sujets d'Examens</h2>
@@ -109,7 +132,7 @@ function StudentDashboard() {
                   </div>
 
                   {/* Soumettre Réponse */}
-                  <div className="bg-base-100 p-6 rounded-xl shadow-sm hover:shadow-md transition">
+                  <div className="bg-base-100 p-6 rounded-xl shadow-md hover:shadow-md transition shadow-teal-300">
                     <div className="flex items-center space-x-4 mb-4">
                       <Send className="h-8 w-8 text-teal-500" />
                       <h2 className="text-xl font-semibold text-base-content">Soumettre Réponse</h2>
@@ -121,7 +144,7 @@ function StudentDashboard() {
                   </div>
 
                   {/* Consulter Réponse */}
-                  <div className="bg-base-100 p-6 rounded-xl shadow-sm hover:shadow-md transition">
+                  <div className="bg-base-100 p-6 rounded-xl shadow-md hover:shadow-md transition shadow-teal-300">
                     <div className="flex items-center space-x-4 mb-4">
                       <FileText className="h-8 w-8 text-teal-500" />
                       <h2 className="text-xl font-semibold text-base-content">Mes Réclamations</h2>
@@ -133,7 +156,7 @@ function StudentDashboard() {
                   </div>
 
                   {/* Consulter Notes */}
-                  <div className="bg-base-100 p-6 rounded-xl shadow-sm hover:shadow-md transition">
+                  <div className="bg-base-100 p-6 rounded-xl shadow-md hover:shadow-md transition shadow-teal-300">
                     <div className="flex items-center space-x-4 mb-4">
                       <CheckCircle className="h-8 w-8 text-teal-500" />
                       <h2 className="text-xl font-semibold text-base-content">Mes Notes</h2>
@@ -145,7 +168,7 @@ function StudentDashboard() {
                   </div>
 
                   {/* Statistiques */}
-                  <div className="bg-base-100 p-6 rounded-xl shadow-sm hover:shadow-md transition">
+                  <div className="bg-base-100 p-6 rounded-xl shadow-md hover:shadow-md transition shadow-teal-300">
                     <div className="flex items-center space-x-4 mb-4">
                       <BarChart3 className="h-8 w-8 text-teal-500" />
                       <h2 className="text-xl font-semibold text-base-content">Statistiques</h2>
