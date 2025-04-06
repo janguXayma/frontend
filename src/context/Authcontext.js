@@ -214,7 +214,7 @@ export const AuthProvider =({children}) =>{
             setUser(jwtDecode(authTokens.access));
             const refreshinterval = setInterval(()=>{
               refreshToken.mutate();
-            },300000);
+            },3000000);
 
             return () => clearInterval(refreshinterval);
           }

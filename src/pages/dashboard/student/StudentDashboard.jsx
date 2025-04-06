@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect } from 'react';
-import '../../../components/classe/Sidebar';
 import { 
   Database, 
   BookOpen, 
@@ -80,8 +79,7 @@ function StudentDashboard() {
               </button>
             </div>
 
-            <ClassList refreshClasses={refreshClasses} />
-
+            <ClassList setCurrentClass={setCurrentClass} />
             {currentClass && (
               <>
                 <h2 className="text-2xl font-bold text-gray-900 mb-8">Tableau de Bord</h2>
@@ -157,8 +155,17 @@ function StudentDashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
-      <Navbar />
-      <Sidebar />
+      <Navbar
+        isMenuOpen={isMenuOpen} 
+        setIsMenuOpen={setIsMenuOpen} 
+/>
+      {/* <Sidebar /> */}
+      <Sidebar 
+          isMenuOpen={isMenuOpen} 
+          setIsMenuOpen={setIsMenuOpen} 
+          handlePageChange={handlePageChange} 
+          currentPage={currentPage}
+      />
       {/* Overlay */}
       {isMenuOpen && (
         <div

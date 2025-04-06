@@ -174,13 +174,13 @@ const navigate = useNavigate();
       {/* En-tête */}
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold">{classData.name}</h1>
+          <h1 className="text-3xl font-bold text-accent">{classData.name}</h1>
           <div className="flex items-center space-x-4 mt-2">
-            <span className="badge badge-info">
+            <span className="badge badge-accent">
               <FiCode className="mr-1" /> {classData.code_activation}
             </span>
             <span className="flex items-center">
-              <FiUsers className="mr-1" /> {classData.students.length} étudiants
+              <FiUsers className="mr-1" /> <strong className="text-accent">{classData.students.length} </strong>étudiants
             </span>
             <span className="flex items-center">
               <FiCalendar className="mr-1" />
@@ -193,7 +193,7 @@ const navigate = useNavigate();
         <div className="flex space-x-4">
           {user?.role === "teacher" && (
             <button 
-              className="btn btn-outline btn-primary"
+              className="btn btn-outline btn-accent"
               disabled={leaveClass.isLoading}
             >
               {leaveClass.isLoading ? "Déconnexion..." : "Gérer la classe"}
@@ -213,9 +213,9 @@ const navigate = useNavigate();
 
 
       {/* Description */}
-      <div className="card bg-base-100 shadow-md mb-6">
+      <div className="card bg-base-100 shadow-sm mb-6 shadow-accent">
         <div className="card-body">
-          <h2 className="card-title">Description</h2>
+          <h2 className="card-title text-accent">Description</h2>
           <p>{classData.description || "Aucune description fournie"}</p>
         </div>
       </div>
@@ -225,10 +225,9 @@ const navigate = useNavigate();
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
      {/* Section Étudiants */}
       <div className="lg:col-span-1">
-        <div className="card bg-base-100 shadow-md">
+        <div className="card bg-base-100 shadow-sm shadow-accent">
           <div className="card-body">
-            <h2 className="card-title">Étudiants inscrits</h2>
-
+            <h2 className="card-title text-accent">Étudiants inscrits</h2>
             {/* 🔹 Liste paginée des étudiants */}
             <div className="max-h-60 overflow-y-auto border border-gray-200 rounded-lg p-2">
             {currentStudents.length > 0 ? (
@@ -276,9 +275,9 @@ const navigate = useNavigate();
 
         {/* Colonne centrale - Fichiers */}
         <div className="lg:col-span-2">
-          <div className="card bg-base-100 shadow-md mb-6">
+          <div className="card bg-base-100 shadow-sm mb-6 shadow-accent">
             <div className="card-body">
-              <h2 className="card-title">Fichiers partagés</h2>
+              <h2 className="card-title text-accent">Fichiers partagés</h2>
               
               {/* Formulaire d'upload */}
               <form onSubmit={handleFileUpload} className="mb-6">
@@ -288,7 +287,7 @@ const navigate = useNavigate();
                     onChange={handleFileChange}
                     className="file-input file-input-bordered w-full" 
                   />
-                  <button type="submit" className="btn btn-primary">
+                  <button type="submit" className="btn btn-accent">
                     <FiUpload className="mr-2" /> Uploader
                   </button>
                 </div>
@@ -341,9 +340,9 @@ const navigate = useNavigate();
           </div>
 
           {/* Section discussion */}
-          <div className="card bg-base-100 shadow-md">
+          <div className="card bg-base-100 shadow-sm shadow-accent">
             <div className="card-body">
-              <h2 className="card-title">Discussion</h2>
+              <h2 className="card-title text-accent">Discussion</h2>
               <form onSubmit={handleSendMessage} className="flex gap-2">
                 <input
                   type="text"
@@ -352,7 +351,7 @@ const navigate = useNavigate();
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                 />
-                <button type="submit" className="btn btn-primary">Envoyer</button>
+                <button type="submit" className="btn btn-accent">Envoyer</button>
               </form>
             </div>
           </div>

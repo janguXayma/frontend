@@ -1,6 +1,10 @@
 import { Menu, Database, User, LogOut } from "lucide-react";
+import AuthContext from "../../context/Authcontext";
 import '../../components/classe/Sidebar'
+import { useContext } from "react";
 const Navbar = ({ isMenuOpen, setIsMenuOpen }) => {
+  const {user,logoutUser} = useContext(AuthContext);
+  const username = user.username;
   return (
     <nav className="bg-white border-b">
       <div className="container mx-auto px-4 py-4">
@@ -20,9 +24,11 @@ const Navbar = ({ isMenuOpen, setIsMenuOpen }) => {
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
               <User className="h-5 w-5 text-gray-600" />
-              <span className="text-gray-600">John Doe</span>
+              <span className="text-gray-600">{username}</span>
             </div>
-            <button className="flex items-center text-gray-600 hover:text-gray-800 transition">
+            <button className="flex items-center text-gray-600 hover:text-gray-800 transition"
+             onClick={logoutUser}
+            >
               <LogOut className="h-5 w-5 mr-1" />
               Déconnexion
             </button>

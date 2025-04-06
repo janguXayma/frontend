@@ -1,8 +1,9 @@
 import React from "react";
 import { useClassServices } from "../../services/useClassServices";
-import { FiUsers, FiCalendar } from "react-icons/fi";
+import { FiUsers, FiCalendar, FiCode } from "react-icons/fi";
 import { FileText, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import CopyButton from "../common/CopyButton";
 
 const ClassList = ({ setShowJoinModal, setCurrentClass }) => {
   const { fetchClasses } = useClassServices();
@@ -55,14 +56,20 @@ const ClassList = ({ setShowJoinModal, setCurrentClass }) => {
                 <FileText className="h-8 w-8 text-teal-500" />
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900">{classItem.name}</h3>
-                  <p className="text-sm text-gray-500">{classItem.professor || "Professeur inconnu"}</p>
+                  <p className="text-sm text-gray-500">{classItem.teacher_name || "Professeur inconnu"}</p>
                 </div>
               </div>
 
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm text-gray-500">Code: {classItem.code_activation}</span>
+                {/* <span className="text-sm text-gray-500">Code: {classItem.code_activation}</span> */}
+                <div className="badge badge-accent text-white gap-2">
+                    <FiCode className="w-4 h-4" />
+                    {classItem.code_activation}
+                  </div>
+                <CopyButton text={classItem.code_activation} />
                 <button
-                  onClick={() => navigate(`/classes/${classItem.id}`)}
+                  // onClick={() => navigate(`/classes/${classItem.id}`)}
+                  onClick={()=> setCurrentClass(classItem)}
                   className="text-teal-600 hover:text-teal-700 font-medium"
                 >
                   Accéder →

@@ -21,7 +21,7 @@ const CopyButton = ({ text }) => {
             ) : (
                 <FiCopy className="w-4 h-4" />
             )}
-            {copied ? "Copié !" : "Copier"}
+            {copied ? "Copié ! 🚀" : "Copier le code "}
         </button>
     );
 };
