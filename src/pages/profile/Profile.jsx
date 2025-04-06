@@ -74,11 +74,11 @@ const Profile = () => {
             <div className="flex justify-between items-start mb-8">
               <h1 className="card-title text-3xl">
                 Profil de {userInfo?.username}
-                <div className="badge badge-secondary">{status}</div>
+                <div className="badge badge-accent">{status}</div>
               </h1>
               <button 
                 onClick={handleEditToggle}
-                className="btn btn-outline btn-primary"
+                className="btn btn-outline btn-accent"
                 disabled={updateUserProfile.isLoading}
               >
                 {isEditing ? 'Annuler' : 'Modifier le profil'}
@@ -90,9 +90,9 @@ const Profile = () => {
                 {/* Section Photo de profil */}
                 <div className="flex-shrink-0">
                   <div className="avatar">
-                    <div className="w-48 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                    <div className="w-48 rounded-full ring ring-accent ring-offset-base-100 ring-offset-2">
                       <img 
-                        src={avatarPreview || (userInfo?.photo || "/default-avatar.png")} 
+                        src={avatarPreview || (userInfo?.photo || "/logo.png")} 
                         alt="Avatar" 
                       />
                     </div>
@@ -110,7 +110,7 @@ const Profile = () => {
                 </div>
 
                 {/* Section Informations */}
-                <div className="flex-grow space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
                   {/* Nom complet */}
                   <div className="form-control">
                     <label className="label">
@@ -122,7 +122,7 @@ const Profile = () => {
                         name="full_name"
                         value={formData.full_name}
                         onChange={handleChange}
-                        className="input input-bordered"
+                        className="input input-bordered input-accent mx-2 gap-2"
                         placeholder="Non renseigné"
                       />
                     ) : (
@@ -141,7 +141,7 @@ const Profile = () => {
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        className="input input-bordered"
+                        className="input input-bordered input-accent mx-2 gap-2"
                       />
                     ) : (
                       <p className="text-lg">{formData.email}</p>
@@ -159,7 +159,7 @@ const Profile = () => {
                         name="phone_number"
                         value={formData.phone_number}
                         onChange={handleChange}
-                        className="input input-bordered"
+                        className="input input-bordered input-accent mx-2 gap-2"
                         placeholder="Non renseigné"
                       />
                     ) : (
@@ -178,7 +178,7 @@ const Profile = () => {
                         name="birth_date"
                         value={formData.birth_date}
                         onChange={handleChange}
-                        className="input input-bordered"
+                        className="input input-bordered input-accent mx-2 gap-2"
                       />
                     ) : (
                       <p className="text-lg">
@@ -197,7 +197,7 @@ const Profile = () => {
                         name="gender"
                         value={formData.gender}
                         onChange={handleChange}
-                        className="select select-bordered"
+                        className="select select-bordered select-accent mx-2 gap-2"
                       >
                         <option value="">Non spécifié</option>
                         <option value="male">Homme</option>
@@ -224,7 +224,7 @@ const Profile = () => {
                         name="bio"
                         value={formData.bio}
                         onChange={handleChange}
-                        className="textarea textarea-bordered h-24"
+                        className="textarea textarea-bordered h-24 textarea-accent mx-2 gap-2"
                         placeholder="Décrivez-vous en quelques mots..."
                       />
                     ) : (
@@ -237,8 +237,8 @@ const Profile = () => {
                   {isEditing && (
                     <div className="flex justify-end gap-4 mt-8">
                   <button
-                    type="submit"
-                    className="btn btn-primary"
+                    type = "submit"
+                    className="btn btn-accent"
                     disabled={updateUserProfile.isLoading}
                   >
                     {updateUserProfile.isLoading ? (
