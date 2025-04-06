@@ -23,6 +23,8 @@ import Navbar from '../../../components/classe/Navbar';
 import ClassList from '../../../components/classe/ClassList';
 import JoinClassModal from '../../../components/classe/JoinClassModal';
 import Sidebar from '../../../components/classe/Sidebar';
+import ThemeToggle from '../../../components/common/ThemeToggle';
+import Profile from '../../profile/Profile';
 
 function StudentDashboard() {
   const { user, logoutUser } = useContext(AuthContext);
@@ -63,8 +65,18 @@ function StudentDashboard() {
           <div className="p-6 bg-white rounded-xl shadow-sm">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Paramètres</h2>
             <p className="text-gray-600">Gérez vos préférences et paramètres du compte.</p>
+            <div className="flex justify-end">
+              <ThemeToggle />
+            </div>
           </div>
         );
+      case 'profile':
+          return (
+            <div className="bg-base-100 rounded-xl shadow-sm">
+              <h2 className="text-2xl font-bold text-base-content mb-4">Profile</h2>
+              <Profile/>
+              </div>
+          );
       default:
         return (
           <>

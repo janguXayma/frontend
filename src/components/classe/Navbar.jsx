@@ -6,30 +6,30 @@ const Navbar = ({ isMenuOpen, setIsMenuOpen }) => {
   const {user,logoutUser} = useContext(AuthContext);
   const username = user.username;
   return (
-    <nav className="bg-white border-b">
+    <nav className="bg-base-100/95 border-b">
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-4">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 hover:bg-gray-100 rounded-lg transition"
+              className="p-2 hover:bg-teal-300 rounded-lg transition"
             >
-              <Menu className="h-6 w-6 text-gray-600" />
+              <Menu className="h-6 w-6 text-base-content" />
             </button>
             <div className="flex items-center space-x-2">
               <Database className="h-8 w-8 text-teal-500" />
-              <span className="text-xl font-bold text-gray-800">janguXayma</span>
+              <span className="text-xl font-bold text-base-content">janguXayma</span>
             </div>
           </div>
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
-              <User className="h-5 w-5 text-gray-600" />
-              <span className="text-gray-600">{username}</span>
+              <User className="h-5 w-5 text-base-content/70" />
+              <span className="text-base-content">{username}</span>
             </div>
-            <button className="flex items-center text-gray-600 hover:text-gray-800 transition"
+            <button className="flex items-center text-base-content hover:text-teal-300 transition"
              onClick={logoutUser}
             >
-              <LogOut className="h-5 w-5 mr-1" />
+              <LogOut className="h-5 w-5 mr-1 text-base-content/70" />
               Déconnexion
             </button>
           </div>

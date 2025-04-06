@@ -173,6 +173,52 @@ export const useClassServices = () => {
     },
   })
 
+  const profileUser = useQuery({
+    queryKey: ["studentProfile"],
+    queryFn: async () => {
+      const authTokens = JSON.parse(localStorage.getItem("authTokens"));
+      const response = await axios.get(`${APIURL}/profile/`, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${authTokens?.access}`,
+          Accept: "application/json",
+        },
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      console.log("Student profile fetched successfully:", data);
+    },
+    onError: (error) => {
+      console.error("Error fetching student profile:", error);
+      showAlert("Erreur lors de la récupération du profil de l'étudiant", "error");
+    },
+  });
+
+  const updateUserProfile = useMutation({
+    mutationFn: async (data) => {
+      const authTokens = JSON.parse(localStorage.getItem("authTokens"));
+      const response = await axios.put(`${APIURL}/profile/update/`, data, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${authTokens?.access}`,
+          Accept: "application/json",
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      console.log("User profile updated successfully:", data);
+      showAlert("Profil mis à jour avec succès", "success");
+    },
+    onError: (error) => {
+      console.error("Error updating user profile:", error);
+      showAlert("Erreur lors de la mise à jour du profil", "error");
+    },
+  })
+  
+
   return {
     fetchClasses,
     createClass,
@@ -181,6 +227,8 @@ export const useClassServices = () => {
     joinClass,
     leaveClass,
     removeStudent,
+    profileUser,
+    updateUserProfile,
   };
 };
 

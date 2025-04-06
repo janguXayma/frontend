@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Home, Calendar, Settings } from 'lucide-react';
+import { X, Home, Calendar, Settings, User } from 'lucide-react';
 
 const Sidebar = ({ isMenuOpen, setIsMenuOpen, handlePageChange, currentPage }) => {
   return (
@@ -25,6 +25,10 @@ const Sidebar = ({ isMenuOpen, setIsMenuOpen, handlePageChange, currentPage }) =
             <button onClick={() => handlePageChange('parametres')} className={`flex items-center space-x-3 w-full p-3 rounded-lg transition ${currentPage === 'parametres' ? 'bg-teal-50 text-teal-600' : 'text-gray-600 hover:bg-gray-50'}`}>
               <Settings className="h-5 w-5" />
               <span>Paramètres</span>
+            </button>
+            <button onClick={() => handlePageChange('profile')} className={`flex items-center space-x-3 w-full p-3 rounded-lg transition ${currentPage === 'profile' ? 'bg-teal-50 text-teal-600' : 'text-gray-600 hover:bg-gray-50'}`}>
+              <User className="h-5 w-5" />
+              <span>Profile</span>
             </button>
           </nav>
         </div>
