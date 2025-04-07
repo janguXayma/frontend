@@ -128,7 +128,9 @@ export default function TeacherDashboard() {
                         <h2 className="text-xl font-semibold text-base-content">Mes Notes</h2>
                       </div>
                       <p className="text-base-content/70 mb-4">Visualisez vos notes et évaluations.</p>
-                      <button className="text-teal-600 hover:text-teal-700 font-medium">
+                      <button className="text-teal-600 hover:text-teal-700 font-medium"
+                        onClick={()=> navigate(`/statistics/student/${currentClass?.id}?success=true`)}
+                      >
                         Voir les notes →
                       </button>
                     </div>

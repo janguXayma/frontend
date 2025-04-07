@@ -13,6 +13,7 @@ import TeacherDashboard from './pages/dashboard/teacher/TeacherDashboard';
 import ClassDetail from './components/classe/ClassDetail';
 import ClassDetailPage from './components/classe/ClassDetail';
 import StatisticClass from './components/statistics/StatisticClass';
+import StudentStatisticsPage from './components/statistics/StatisticStudent';
 
 function App() {
   const GOOGLE_CLIENT_ID = "1039352446446-gidvsi4pjl47oe79815df6tun0vtkgfl.apps.googleusercontent.com";
@@ -40,6 +41,7 @@ function App() {
             } />
             <Route path="/classes/:id" element={<ClassDetailPage />} />
             <Route path="/statistics/class/:id" element={ <StatisticClass />} />
+            <Route path='/statistics/student/:id' element={ <StudentStatisticsPage/>}/>
             <Route path="/profile" element={<Profile />} />
           </Routes>
         </AuthProvider>
