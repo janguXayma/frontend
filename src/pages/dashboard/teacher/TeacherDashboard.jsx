@@ -18,6 +18,7 @@ import Sidebar from '../../../components/classe/Sidebar';
 import { useNavigate } from 'react-router-dom';
 import ThemeToggle from '../../../components/common/ThemeToggle';
 import Profile from '../../profile/Profile';
+import Agenda from '../../agenda/Agenda';
 
 export default function TeacherDashboard() {
     const { user } = useContext(AuthContext)
@@ -44,6 +45,9 @@ export default function TeacherDashboard() {
             <div className="p-6 bg-base-100 rounded-xl shadow-sm">
               <h2 className="text-2xl font-bold text-base-content mb-4">Agenda</h2>
               <p className="text-base-content/70">Votre calendrier et vos événements à venir.</p>
+              <div className="">
+                <Agenda/>
+              </div>
             </div>
           );
         case 'parametres':

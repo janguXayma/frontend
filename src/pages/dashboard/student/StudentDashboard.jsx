@@ -26,6 +26,7 @@ import Sidebar from '../../../components/classe/Sidebar';
 import ThemeToggle from '../../../components/common/ThemeToggle';
 import Profile from '../../profile/Profile';
 import Agenda from '../../agenda/Agenda';
+import { useNavigate } from 'react-router-dom';
 
 function StudentDashboard() {
   const { user, logoutUser } = useContext(AuthContext);
@@ -34,6 +35,7 @@ function StudentDashboard() {
   const [currentClass, setCurrentClass] = useState(null); // Removed type annotation
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState('accueil');
+  const navigate = useNavigate();
   
   const { fetchClasses } = useClassServices();
 
@@ -162,7 +164,9 @@ function StudentDashboard() {
                       <h2 className="text-xl font-semibold text-base-content">Mes Notes</h2>
                     </div>
                     <p className="text-base-content/70 mb-4">Visualisez vos notes et évaluations.</p>
-                    <button className="text-teal-600 hover:text-teal-700 font-medium">
+                    <button className="text-teal-600 hover:text-teal-700 font-medium"
+                      onClick={()=> navigate(`/statistics/student/${currentClass?.id}?success=true`)}
+                    >
                       Voir les notes →
                     </button>
                   </div>
@@ -174,7 +178,9 @@ function StudentDashboard() {
                       <h2 className="text-xl font-semibold text-base-content">Statistiques</h2>
                     </div>
                     <p className="text-base-content/70 mb-4">Analysez vos performances et votre progression.</p>
-                    <button className="text-teal-600 hover:text-teal-700 font-medium">
+                    <button className="text-teal-600 hover:text-teal-700 font-medium"
+                    onClick={()=> navigate(`/statistics/class/${currentClass?.id}?success=true`)}
+                    >
                       Voir les statistiques →
                     </button>
                   </div>
