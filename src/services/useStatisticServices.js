@@ -32,7 +32,7 @@ export const useStatisticServices = (classeId) => {
       queryFn: async () => {
         const authTokens = JSON.parse(localStorage.getItem("authTokens"));
         const response = await axios.get(
-          `${APIURL}/statistic-students/get_statistics_by_student?student_id=${studentId}`,
+          `${APIURL}/statistic-students/get_statistics_by_student/?student_id=${studentId}`,
           {
             headers: {
               Authorization: `Bearer ${authTokens?.access}`,

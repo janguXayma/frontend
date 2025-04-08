@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { useStatisticsStudent, useStudentList } from '../../services/useStatisticServices';
+import { useStatisticsStudent } from '../../services/useStatisticServices';
 import { FileText, Trophy, Star, Clock, User, Award, Percent, Activity } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Link, useParams } from 'react-router-dom';
@@ -9,17 +9,44 @@ import AuthContext from '../../context/Authcontext';
 const StudentStatisticsPage = () => {
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const { id } = useParams();
-  const { data: classData} = useFetchClassById(id);
+  const { data: classData } = useFetchClassById(id);
   const students = classData?.students || [];
   const { data: studentStats, isLoading, error } = useStatisticsStudent(selectedStudentId);
   const { user } = useContext(AuthContext);
   const homePath = user?.role === "teacher" ? "/dashboard/teacher" : "/dashboard/student";
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentStats = studentStats?.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(studentStats?.length / itemsPerPage);
+
 
   // Configuration des données pour les graphiques
-  const performanceData = studentStats?.exercise_history?.map(ex => ({
-    date: new Date(ex.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }),
-    score: ex.score
+  const performanceData = studentStats?.map(stat => ({
+    date: new Date(stat.updated_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }),
+    score: stat.score
   })) || [];
+
+  // Calcul des statistiques globales
+  const calculateStats = (stats) => {
+    if (!stats || stats.length === 0) return null;
+    
+    const scores = stats.map(s => s.score);
+    const submitted = stats.reduce((sum, stat) => sum + stat.total_exercises_submitted, 0);
+    const corrected = stats.reduce((sum, stat) => sum + stat.total_exercises_corrected, 0);
+    
+    return {
+      average_score: scores.reduce((a, b) => a + b, 0) / scores.length,
+      best_score: Math.max(...scores),
+      success_rate: (corrected > 0) ? (scores.filter(s => s >= 10).length / corrected * 100) : 0,
+      total_exercises_submitted: submitted,
+      total_exercises_corrected: corrected
+    };
+  };
+
+  const globalStats = calculateStats(studentStats);
 
   return (
     <div className="p-6 space-y-8 bg-base-100">
@@ -52,12 +79,12 @@ const StudentStatisticsPage = () => {
                   <div className="flex items-center gap-3">
                     <div className="avatar placeholder">
                       <div className="bg-neutral text-neutral-content rounded-full w-8">
-                      <span>{student.user.username?.[0]?.toUpperCase() || '?'}</span>
+                        <span>{student.user.username?.[0]?.toUpperCase() || '?'}</span>
                       </div>
                     </div>
                     <div>
-                    <h3 className="font-bold">{student.user.username}</h3>
-                    <p className="text-sm text-base-content/60">{student.classe_name}</p>
+                      <h3 className="font-bold">{student.user.username}</h3>
+                      <p className="text-sm text-base-content/60">{student.classe_name}</p>
                     </div>
                   </div>
                 </div>
@@ -81,7 +108,7 @@ const StudentStatisticsPage = () => {
               </svg>
               <span>Erreur lors du chargement des statistiques</span>
             </div>
-          ) : studentStats && (
+          ) : studentStats && studentStats.length > 0 && (
             <>
               {/* En-tête étudiant */}
               <div className="card bg-base-100 shadow-xl">
@@ -90,18 +117,18 @@ const StudentStatisticsPage = () => {
                     <div className="flex items-center gap-4">
                       <div className="avatar placeholder">
                         <div className="w-12 rounded-full bg-neutral text-neutral-content">
-                        <span>{studentStats.student_name?.[0]?.toUpperCase() || '?'}</span>
+                          <span>{studentStats[0].student_name?.[0]?.toUpperCase() || '?'}</span>
                         </div>
                       </div>
                       <div>
-                        <h1 className="text-2xl font-bold">{studentStats?.student_name}</h1>
-                        <p className="text-base-content/60">{studentStats?.classe_name}</p>
+                        <h1 className="text-2xl font-bold">{studentStats[0].student_name}</h1>
+                        <p className="text-base-content/60">{studentStats[0].classe_name}</p>
                       </div>
                     </div>
                     <div className="text-right">
                       <p className="text-sm">Dernière activité</p>
                       <p className="font-mono">
-                        {new Date(studentStats.updated_at).toLocaleDateString('fr-FR')}
+                        {new Date(studentStats[studentStats.length - 1].updated_at).toLocaleDateString('fr-FR')}
                       </p>
                     </div>
                   </div>
@@ -112,7 +139,7 @@ const StudentStatisticsPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <StatCard 
                   title="Score moyen" 
-                  value={studentStats.average_score} 
+                  value={globalStats.average_score} 
                   icon={<Percent className="text-primary" />}
                   color="primary"
                   maxValue={20}
@@ -120,7 +147,7 @@ const StudentStatisticsPage = () => {
                 
                 <StatCard 
                   title="Meilleur score" 
-                  value={studentStats.best_score} 
+                  value={globalStats.best_score} 
                   icon={<Trophy className="text-secondary" />}
                   color="secondary"
                   maxValue={20}
@@ -128,7 +155,7 @@ const StudentStatisticsPage = () => {
                 
                 <StatCard 
                   title="Taux de réussite" 
-                  value={studentStats.success_rate} 
+                  value={globalStats.success_rate} 
                   icon={<Star className="text-accent" />}
                   color="accent"
                   suffix="%"
@@ -160,8 +187,8 @@ const StudentStatisticsPage = () => {
                 <ChartCard title="Répartition des exercices" icon={<FileText className="text-success" />}>
                   <div className="h-64 flex items-center justify-center">
                     <div className="radial-progress text-primary" 
-                      style={{ '--value': studentStats.success_rate, '--size': '12rem' }}>
-                      {studentStats.success_rate}%
+                      style={{ '--value': globalStats.success_rate, '--size': '12rem' }}>
+                      {globalStats.success_rate.toFixed(1)}%
                     </div>
                   </div>
                 </ChartCard>
@@ -173,6 +200,17 @@ const StudentStatisticsPage = () => {
                   <h2 className="card-title">
                     <FileText className="w-6 h-6 text-warning" />
                     Détail des exercices
+                    <div className="ml-auto flex items-center gap-2">
+                      <select 
+                        className="select select-sm select-bordered"
+                        value={itemsPerPage}
+                        onChange={(e) => setItemsPerPage(Number(e.target.value))}
+                      >
+                        <option value={5}>5 éléments</option>
+                        <option value={10}>10 éléments</option>
+                        <option value={20}>20 éléments</option>
+                      </select>
+                  </div>
                   </h2>
                   
                   <div className="overflow-x-auto">
@@ -180,26 +218,47 @@ const StudentStatisticsPage = () => {
                       <thead>
                         <tr>
                           <th>Date</th>
-                          <th>Exercice</th>
+                          <th>Exercices soumis</th>
+                          <th>Exercices corrigés</th>
                           <th>Score</th>
                           <th>Statut</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {studentStats.exercise_history?.map((ex, index) => (
+                        {currentStats.map((stat, index) => (
                           <tr key={index}>
-                            <td>{new Date(ex.date).toLocaleDateString('fr-FR')}</td>
-                            <td>{ex.exercise_name}</td>
-                            <td>{ex.score}/20</td>
+                            <td>{new Date(stat.updated_at).toLocaleDateString('fr-FR')}</td>
+                            <td>{stat.total_exercises_submitted}</td>
+                            <td>{stat.total_exercises_corrected}</td>
+                            <td>{stat.score}/20</td>
                             <td>
-                              <span className={`badge ${ex.score >= 10 ? 'badge-success' : 'badge-error'}`}>
-                                {ex.score >= 10 ? 'Réussi' : 'Échec'}
+                              <span className={`badge ${stat.score >= 10 ? 'badge-success' : 'badge-error'}`}>
+                                {stat.score >= 10 ? 'Réussi' : 'Échec'}
                               </span>
                             </td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
+                    <div className="flex justify-end mt-4 gap-2">
+                      <button
+                        className="btn btn-sm"
+                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                        disabled={currentPage === 1}
+                      >
+                        Précédent
+                      </button>
+                      <span className="text-sm flex items-center">
+                        Page {currentPage} / {totalPages}
+                      </span>
+                      <button
+                        className="btn btn-sm"
+                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                        disabled={currentPage === totalPages}
+                      >
+                        Suivant
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

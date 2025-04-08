@@ -10,7 +10,7 @@ const StatisticClass = () => {
   const { user } = useContext(AuthContext);
   const { data: classStats } = useStatisticServices(id);
   const [currentPage, setCurrentPage] = useState(1);
-const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
   // Données calculées
   const bestStudent = classStats?.top_students?.[0];

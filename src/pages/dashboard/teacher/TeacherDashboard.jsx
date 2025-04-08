@@ -87,7 +87,7 @@ export default function TeacherDashboard() {
                     <div className="bg-base-100 p-6 rounded-xl shadow-md hover:shadow-md transition shadow-teal-300">
                       <div className="flex items-center space-x-4 mb-4">
                         <BookOpen className="h-8 w-8 text-teal-500" />
-                        <h2 className="text-xl font-semibold text-base-content">Sujets d'Examens</h2>
+                        <h2 className="text-xl font-semibold text-base-content">Sujets d'Examens<span className="mx-2 badge badge-sm badge-accent">A venir</span> </h2>
                       </div>
                       <p className="text-base-content/70 mb-4">Accédez à tous vos sujets d'examens et exercices disponibles.</p>
                       <button className="text-teal-600 hover:text-teal-700 font-medium">
@@ -113,7 +113,7 @@ export default function TeacherDashboard() {
                     <div className="bg-base-100 p-6 rounded-xl shadow-md hover:shadow-md transition shadow-teal-300">
                       <div className="flex items-center space-x-4 mb-4">
                         <FileText className="h-8 w-8 text-teal-500" />
-                        <h2 className="text-xl font-semibold text-base-content">Mes Réclamations</h2>
+                        <h2 className="text-xl font-semibold text-base-content">Mes Réclamations<span className="mx-2 badge badge-sm badge-accent">A venir</span></h2>
                       </div>
                       <p className="text-base-content/70 mb-4">Consultez vos réponses soumises et leur statut.</p>
                       <button className="text-teal-600 hover:text-teal-700 font-medium">
