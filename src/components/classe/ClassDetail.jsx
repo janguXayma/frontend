@@ -117,6 +117,13 @@ const handleFileUploadTeacher = (e) => {
         swal.fire("Erreur", "Erreur lors de l'upload du fichier.", "error");
       },
     });
+    // Réinitialiser les champs après l'upload
+    setFileTitle("");
+    setFileDescription("");
+    setFileType("sql");
+    setFileIspublished(false);
+    setFileDueDate("");
+
     setSelectedFile(null);
     e.target.reset();
   }
@@ -329,14 +336,14 @@ const handleFileUploadTeacher = (e) => {
             {totalStudents > studentsPerPage && (
               <div className="join grid grid-cols-2 mt-4">
                 <button 
-                  className="join-item btn btn-primary"
+                  className="join-item btn btn-accent"
                   onClick={prevPage} 
                   disabled={currentPage === 1}
                 >
                   Précédent
                 </button>
                 <button 
-                  className="join-item btn btn-primary"
+                  className="join-item btn btn-accent"
                   onClick={nextPage} 
                   disabled={currentPage === totalPages}
                 >
@@ -451,6 +458,7 @@ const handleFileUploadTeacher = (e) => {
                       <th>Nom</th>
                       <th>Type</th>
                       <th>Date</th>
+                      {/* <th>Professeur</th> */}
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -465,7 +473,8 @@ const handleFileUploadTeacher = (e) => {
                             </div>
                           </td>
                           <td>{file.exercise_type}</td>
-                          <td>{file.created_at || "N/A"}</td>
+                          <td>{new Date(file.created_at).toLocaleDateString() || "N/A"}</td>
+                          {/* <td>{file.created_by?.split('@')[0]}</td> */}
                           <td>
                             <div className="flex space-x-2">
                               <a
