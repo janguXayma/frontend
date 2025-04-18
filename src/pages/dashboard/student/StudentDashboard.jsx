@@ -140,7 +140,9 @@ function StudentDashboard() {
                       <h2 className="text-xl font-semibold text-base-content">Soumettre Réponse</h2>
                     </div>
                     <p className="text-base-content/70 mb-4">Soumettez vos réponses aux exercices et examens.</p>
-                    <button className="text-teal-600 hover:text-teal-700 font-medium">
+                    <button className="text-teal-600 hover:text-teal-700 font-medium"
+                    onClick={()=> navigate(`/classes/${currentClass?.id}`)}
+                    >
                       Soumettre →
                     </button>
                   </div>

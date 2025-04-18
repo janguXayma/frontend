@@ -5,6 +5,7 @@ import { FiUsers, FiCode, FiCalendar, FiUpload, FiFile, FiDownload, FiTrash2, Fi
 import AuthContext from "../../context/Authcontext";
 import swal from "sweetalert2";
 import { useQueryClient } from "@tanstack/react-query";
+import { useFileServices } from "../../services/useFileServices";
 
 const ClassDetailPage = () => {
   const queryClient = useQueryClient();
@@ -16,6 +17,8 @@ const [loadingStudents, setLoadingStudents] = useState({});
 const { id } = useParams();
 const { data: classData, isLoading, isError, refetch } = useFetchClassById(id);
 const { leaveClass, removeStudent} = useClassServices();
+const {uploadFile} = useFileServices();
+const { data: fetchFiles } = useFileServices();  
 
 
 const studentsPerPage = 1;
@@ -72,7 +75,10 @@ const navigate = useNavigate();
  const handleFileUpload = (e) => {
   e.preventDefault();
   if (selectedFile) {
-    console.log("Fichier sélectionné pour l'upload:", selectedFile.name);
+    const formData = new FormData();
+    formData.append("pdf_file", selectedFile);
+    // formData.append("class_id", classData.id); 
+    uploadFile.mutate(formData);
     setSelectedFile(null);
     e.target.reset();
   }
@@ -288,7 +294,7 @@ const navigate = useNavigate();
                     className="file-input file-input-bordered w-full" 
                   />
                   <button type="submit" className="btn btn-accent">
-                    <FiUpload className="mr-2" /> Uploader
+                  {uploadFile.isLoading ? "Envoi..." : <><FiUpload className="mr-2" /> Uploader</>}
                   </button>
                 </div>
               </form>
