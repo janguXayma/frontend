@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { useParams,Link, useNavigate } from "react-router-dom";
+import { useParams,Link, useNavigate, data } from "react-router-dom";
 import { useClassServices,useFetchClassById } from "../../services/useClassServices";
 import { FiUsers, FiCode, FiCalendar, FiUpload, FiFile, FiDownload, FiTrash2, FiArrowLeft } from 'react-icons/fi';
 import AuthContext from "../../context/Authcontext";
@@ -17,8 +17,23 @@ const [loadingStudents, setLoadingStudents] = useState({});
 const { id } = useParams();
 const { data: classData, isLoading, isError, refetch } = useFetchClassById(id);
 const { leaveClass, removeStudent} = useClassServices();
-const {uploadFile} = useFileServices();
-const { data: fetchFiles } = useFileServices();  
+// const {uploadFile} = useFileServices();
+// const { data: fileTeacher } = useFileServices();
+// const {uploadFileTeacher} = useFileServices();  
+const { 
+  uploadFile,
+  uploadFileTeacher,
+  deleteFileTeacher,
+  data: fileTeacher, 
+  isLoading: isLoadingFiles, 
+  isError: isErrorFiles 
+} = useFileServices();
+
+const [fileTitle, setFileTitle] = useState("");
+const [fileDescription, setFileDescription] = useState("");
+const [fileType, setFileType] = useState("pdf");
+const [fileIspublished, setFileIspublished] = useState(false);
+const [fileDueDate, setFileDueDate] = useState("");
 
 
 const studentsPerPage = 1;
@@ -77,12 +92,35 @@ const navigate = useNavigate();
   if (selectedFile) {
     const formData = new FormData();
     formData.append("pdf_file", selectedFile);
-    // formData.append("class_id", classData.id); 
     uploadFile.mutate(formData);
     setSelectedFile(null);
     e.target.reset();
   }
 };
+const handleFileUploadTeacher = (e) => {
+  e.preventDefault();
+  if (selectedFile) {
+    const formData = new FormData();
+    formData.append("pdf_file", selectedFile);
+    formData.append("title", fileTitle);
+    formData.append("description", fileDescription);
+    formData.append("file_type", fileType);
+    formData.append("is_published", fileIspublished);
+    formData.append("due_date", fileDueDate);
+
+    uploadFileTeacher.mutate(formData, {
+      onSuccess: () => {
+        swal.fire("Succès", "Fichier uploadé avec succès.", "success");
+        queryClient.invalidateQueries(["filesTeacher"]);
+      },
+      onError: () => {
+        swal.fire("Erreur", "Erreur lors de l'upload du fichier.", "error");
+      },
+    });
+    setSelectedFile(null);
+    e.target.reset();
+  }
+}
 
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
@@ -160,6 +198,38 @@ const navigate = useNavigate();
             onSettled:() => {
               setLoadingStudents((prev) =>({ ...prev, [student_id]:false}));
             }
+          }
+        );
+      }
+    });
+  }
+
+  const handleRemoveFile = (fileId)=>{
+    if(!fileId){
+      console.error("Erreur : fileId est undefined !");
+      return;
+    }
+    swal.fire({
+      title: "Supprimer le fichier ?",
+      text: `Êtes-vous sûr de vouloir supprimer ce fichier ?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Oui, supprimer",
+      cancelButtonText: "Annuler",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteFileTeacher.mutate(
+          fileId,
+          { 
+            onSuccess: () => {
+              queryClient.invalidateQueries(["deleteFileTeacher", id]);
+              swal.fire("Succès", `Fichier supprimé avec succès.`, "success");
+            },
+            onError: () => {
+              swal.fire("Erreur", "Impossible de supprimer le fichier.", "error");
+            },
           }
         );
       }
@@ -286,7 +356,8 @@ const navigate = useNavigate();
               <h2 className="card-title text-accent">Fichiers partagés</h2>
               
               {/* Formulaire d'upload */}
-              <form onSubmit={handleFileUpload} className="mb-6">
+              {user?.role === "student" && (
+                <form onSubmit={handleFileUpload} className="mb-6">
                 <div className="flex gap-2">
                   <input 
                     type="file" 
@@ -298,6 +369,79 @@ const navigate = useNavigate();
                   </button>
                 </div>
               </form>
+              )}
+
+              <div className="">
+                {user?.role === "teacher" && (
+                  <form onSubmit={handleFileUploadTeacher} className="space-y-4 bg-base-100 p-6 rounded-xl shadow-md border">
+                    
+                    <h2 className="text-xl font-semibold text-primary">Uploader un document</h2>
+
+                    {/* Titre */}
+                    <input
+                      type="text"
+                      placeholder="Titre du fichier"
+                      className="input input-bordered w-full"
+                      value={fileTitle}
+                      onChange={(e) => setFileTitle(e.target.value)}
+                      required
+                    />
+
+                    {/* Description */}
+                    <textarea
+                      className="textarea textarea-bordered w-full"
+                      placeholder="Description"
+                      value={fileDescription}
+                      onChange={(e) => setFileDescription(e.target.value)}
+                    />
+
+                    {/* Type du fichier */}
+                    <select
+                      className="select select-bordered w-full"
+                      value={fileType}
+                      onChange={(e) => setFileType(e.target.value)}
+                    >
+                      <option value="">Choisir le type de fichier</option>
+                      <option value="SQL">Exercice SQL</option>
+                      <option value="THEORY">Question THEORY</option>
+                      <option value="DESIGN">Modélisation</option>
+                    </select>
+
+                    {/* Date limite */}
+                    <input
+                      type="date"
+                      className="input input-bordered w-full"
+                      value={fileDueDate}
+                      onChange={(e) => setFileDueDate(e.target.value)}
+                    />
+
+                    {/* Est publié */}
+                    <label className="label cursor-pointer justify-start gap-4">
+                      <input
+                        type="checkbox"
+                        className="checkbox checkbox-success"
+                        checked={fileIspublished}
+                        onChange={(e) => setFileIspublished(e.target.checked)}
+                      />
+                      <span className="label-text">Publier ce fichier</span>
+                    </label>
+
+                    {/* Upload fichier */}
+                    <div className="flex gap-2">
+                      <input 
+                        type="file" 
+                        accept=".pdf"
+                        onChange={handleFileChange}
+                        className="file-input file-input-bordered w-full" 
+                        required
+                      />
+                      <button type="submit" className="btn btn-accent">
+                        {uploadFileTeacher.isLoading ? "Envoi..." : <><FiUpload className="mr-2" /> Uploader</>}
+                      </button>
+                    </div>
+                  </form>
+                )}
+              </div>
 
               {/* Liste des fichiers */}
               <div className="overflow-x-auto">
@@ -305,38 +449,50 @@ const navigate = useNavigate();
                   <thead>
                     <tr>
                       <th>Nom</th>
-                      <th>Taille</th>
+                      <th>Type</th>
                       <th>Date</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {classData.files && classData.files.length > 0 ? (
-                      classData.files.map(file => (
+                    {fileTeacher && fileTeacher.length > 0 ? (
+                      fileTeacher.map(file => (
                         <tr key={file.id}>
                           <td>
                             <div className="flex items-center">
                               <FiFile className="mr-2" />
-                              {file.name}
+                              {file.title}
                             </div>
                           </td>
-                          <td>{file.size || "N/A"}</td>
-                          <td>{file.date || "N/A"}</td>
+                          <td>{file.exercise_type}</td>
+                          <td>{file.created_at || "N/A"}</td>
                           <td>
                             <div className="flex space-x-2">
-                              <button className="btn btn-xs btn-success">
+                              <a
+                                href={file.pdf_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="btn btn-xs btn-success"
+                              >
                                 <FiDownload />
-                              </button>
-                              <button className="btn btn-xs btn-error">
-                                <FiTrash2 />
-                              </button>
+                              </a>
+                              {user?.role === "teacher" && (
+                                <button 
+                                  className="btn btn-xs btn-error" 
+                                  onClick={() => handleRemoveFile(file.id)}
+                                >
+                                  <FiTrash2 />
+                                </button>
+                              )}
                             </div>
                           </td>
                         </tr>
                       ))
                     ) : (
                       <tr>
-                        <td colSpan="4" className="text-center text-gray-500">Aucun fichier disponible.</td>
+                        <td colSpan="4" className="text-center text-gray-500">
+                          Aucun exercice disponible.
+                        </td>
                       </tr>
                     )}
                   </tbody>
