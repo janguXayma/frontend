@@ -44,7 +44,7 @@ const ClassList = ({ setShowJoinModal, setCurrentClass }) => {
           {fetchClasses.data?.map((classItem) => (
             <div
               key={classItem.id}
-              className="bg-base-100 p-6 rounded-xl shadow-md hover:shadow-md transition border border-base-300 shadow-teal-300"
+              className="bg-base-100 p-6 rounded-xl shadow-md hover:shadow-md transition border border-base-300 shadow-teal-100"
             >
               {/* Header: infos rapides */}
               <div className="flex justify-between text-sm text-base-content/60">

@@ -5,26 +5,31 @@ import axios from "axios";
 
 export const useFileServices = () => {
     const queryClient = useQueryClient();
-    // const fetchFiles = useQuery({
-    //     queryKey: ["files"],
-    //     queryFn: async () => {
-    //     const authTokens = JSON.parse(localStorage.getItem("authTokens"));
-    //     const response = await axios.get(`${APIURL}/files/`, {
-    //         withCredentials: true,
-    //         headers: {
-    //         Authorization: `Bearer ${authTokens?.access}`,
-    //         Accept: "application/json",
-    //         },
-    //     });
-    //     return response.data;
-    //     },
-    //     onSuccess: (data) => {
-    //     console.log("Files fetched successfully:", data);
-    //     },
-    //     onError: (error) => {
-    //     showAlert("Erreur lors de la récupération des fichiers", "error");
-    //     },
-    // });
+    const {
+        data: studentUploads,
+        isLoading: isLoadingUploads,
+        isError: isErrorUploads
+      } = useQuery({
+        queryKey: ["files"],
+        queryFn: async () => {
+          const authTokens = JSON.parse(localStorage.getItem("authTokens"));
+          const response = await axios.get(`${APIURL}/list_uploaded_pdfs/`, {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${authTokens?.access}`,
+              Accept: "application/json",
+            },
+          });
+          return response.data;
+        },
+        onSuccess: (data) => {
+          console.log("Student uploads fetched:", data);
+        },
+        onError: (error) => {
+          showAlert("Erreur lors de la récupération des fichiers étudiants", "error");
+        },
+      });
+      
     
     const uploadFile = useMutation({
         mutationFn: async (fileData) => {
@@ -114,11 +119,43 @@ export const useFileServices = () => {
         },
     });
 
+    const extractText = useMutation({
+        mutationFn: async (reponseId) => {
+          const authTokens = JSON.parse(localStorage.getItem("authTokens"));
+          const response = await axios.get(`${APIURL}/pdf_to_text/${reponseId}/`, {
+            headers: {
+              Authorization: `Bearer ${authTokens?.access}`,
+            //   Accept: "text/plain",
+            },
+            responseType: "blob", 
+          });
+          return response.data;
+        },
+        onSuccess: (data) => {
+          const blob = new Blob([data], { type: "text/plain" });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "extrait_pdf.txt";
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          showAlert("Texte extrait avec succès !", "success");
+        },
+        onError: (error) => {
+          showAlert(error.response?.data?.error || "Erreur d'extraction", "error");
+        }
+      });
+      
+
     return{
-        // fetchFiles,
+        studentUploads,
+        isLoadingUploads,
+        isErrorUploads,
         uploadFile,
         uploadFileTeacher,
         deleteFileTeacher,
+        extractText,
         data, 
         isLoading,
         isError,

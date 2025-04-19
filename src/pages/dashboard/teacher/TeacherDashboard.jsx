@@ -58,6 +58,17 @@ export default function TeacherDashboard() {
               <div className="flex justify-end">
                 <ThemeToggle />
               </div>
+              <div className="space-y-4">
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Langue</span>
+                  </label>
+                  <select className="select select-bordered w-full max-w-sm select-accent mx-3">
+                    <option value="fr">Français</option>
+                    {/* <option value="en">Anglais</option> */}
+                  </select>
+                </div>
+              </div>
             </div>
           );
           case 'profile':

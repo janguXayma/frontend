@@ -6,6 +6,7 @@ import AuthContext from "../../context/Authcontext";
 import swal from "sweetalert2";
 import { useQueryClient } from "@tanstack/react-query";
 import { useFileServices } from "../../services/useFileServices";
+import showAlert from "../../utils/constants";
 
 const ClassDetailPage = () => {
   const queryClient = useQueryClient();
@@ -20,10 +21,14 @@ const { leaveClass, removeStudent} = useClassServices();
 // const {uploadFile} = useFileServices();
 // const { data: fileTeacher } = useFileServices();
 // const {uploadFileTeacher} = useFileServices();  
-const { 
+const {
+  studentUploads,
+  isLoadingUploads,
+  isErrorUploads, 
   uploadFile,
   uploadFileTeacher,
   deleteFileTeacher,
+  extractText,
   data: fileTeacher, 
   isLoading: isLoadingFiles, 
   isError: isErrorFiles 
@@ -34,6 +39,7 @@ const [fileDescription, setFileDescription] = useState("");
 const [fileType, setFileType] = useState("pdf");
 const [fileIspublished, setFileIspublished] = useState(false);
 const [fileDueDate, setFileDueDate] = useState("");
+const [extractedText, setExtractedText] = useState(null);
 
 
 const studentsPerPage = 1;
@@ -87,16 +93,29 @@ const navigate = useNavigate();
 );
 
 
- const handleFileUpload = (e) => {
+const handleFileUpload = (e) => {
   e.preventDefault();
   if (selectedFile) {
     const formData = new FormData();
     formData.append("pdf_file", selectedFile);
-    uploadFile.mutate(formData);
+
+    uploadFile.mutate(formData, {
+      onSuccess: (data) => {
+        console.log("✅ Résultat du backend :", data);
+        if (data?.id) {
+          extractText.mutate(data.id);
+        } else {
+          console.warn("⚠️ Aucun ID reçu !");
+          showAlert("Aucun ID retourné", "warning");
+        }
+      }
+    });
+    
     setSelectedFile(null);
     e.target.reset();
   }
 };
+
 const handleFileUploadTeacher = (e) => {
   e.preventDefault();
   if (selectedFile) {
@@ -377,12 +396,21 @@ const handleFileUploadTeacher = (e) => {
                 </div>
               </form>
               )}
+              {extractedText && (
+                <div className="text-preview">
+                  <h3>Texte extrait :</h3>
+                  <pre>{extractedText}</pre>
+                  <button onClick={() => navigator.clipboard.writeText(extractedText)}>
+                    Copier le texte
+                  </button>
+                </div>
+              )}
 
               <div className="">
                 {user?.role === "teacher" && (
                   <form onSubmit={handleFileUploadTeacher} className="space-y-4 bg-base-100 p-6 rounded-xl shadow-md border">
                     
-                    <h2 className="text-xl font-semibold text-primary">Uploader un document</h2>
+                    {/* <h2 className="text-xl font-semibold text-primary">Uploader un document</h2> */}
 
                     {/* Titre */}
                     <input
@@ -504,6 +532,55 @@ const handleFileUploadTeacher = (e) => {
                         </td>
                       </tr>
                     )}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Liste des fichiers des etudiants */}
+              <h2 className="card-title text-accent mt-6">Fichiers des étudiants</h2>
+              <div className="overflow-x-auto">
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>#ID</th>
+                      <th>Nom</th>
+                      <th>Date</th>
+                      {/* <th>Professeur</th> */}
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {studentUploads && studentUploads.length > 0 ? (
+                    studentUploads.map(file => (
+                      <tr key={file.id}>
+                        <td>
+                          <div className="flex items-center">
+                            <FiFile className="mr-2" />
+                            {file.id}
+                          </div>
+                        </td>
+                        <td>{file.student_name}</td>
+                        <td>{new Date(file.uploaded_at).toLocaleDateString() || "N/A"}</td>
+                        <td>
+                          <a
+                            href={file.pdf_file}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn-xs btn-success"
+                          >
+                            <FiDownload />
+                          </a>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="4" className="text-center text-gray-500">
+                        Aucun fichier disponible.
+                      </td>
+                    </tr>
+                  )}
+
                   </tbody>
                 </table>
               </div>
