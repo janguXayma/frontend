@@ -25,12 +25,12 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-8 bg-gradient-to-r from-blue-500 to-purple-500 overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center p-8 bg-gradient-to-r from-teal-200 to-teal-700 overflow-hidden">
       {/* Card pour le formulaire */}
       <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full space-y-6">
         {/* Logo */}
         <div className="text-center">
-          <span className="text-4xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+          <span className="text-4xl font-bold bg-gradient-to-r from-teal-200 to-teal-700 bg-clip-text text-transparent">
           janguXayma
           </span>
           <p className="mt-2 text-gray-600">Connectez-vous pour accéder à votre compte 🔐</p>
@@ -40,7 +40,7 @@ const Login = () => {
         <form className="space-y-6" onSubmit={handleSubmit}>
           {/* Champ Email */}
           <div>
-            <label className="w-full input input-bordered input-secondary flex items-center gap-2">
+            <label className="w-full input input-bordered input-accent flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 16 16"
@@ -64,7 +64,7 @@ const Login = () => {
 
           {/* Champ Mot de passe */}
           <div>
-            <label className="w-full input input-bordered input-primary flex items-center gap-2">
+            <label className="w-full input input-bordered input-accent flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 16 16"
@@ -93,7 +93,7 @@ const Login = () => {
           <div>
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-2 px-4 rounded-lg hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200"
+              className="w-full bg-gradient-to-r from-teal-200 to-teal-700 text-white py-2 px-4 rounded-lg hover:bg-gradient-to-r hover:from-teal-600 hover:to-teal-800 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200"
               disabled={loginMutation.isPending}
             >
               {loginMutation.isPending ? 'Chargement...' : 'Se connecter'}

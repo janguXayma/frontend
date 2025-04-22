@@ -18,9 +18,7 @@ const [loadingStudents, setLoadingStudents] = useState({});
 const { id } = useParams();
 const { data: classData, isLoading, isError, refetch } = useFetchClassById(id);
 const { leaveClass, removeStudent} = useClassServices();
-// const {uploadFile} = useFileServices();
-// const { data: fileTeacher } = useFileServices();
-// const {uploadFileTeacher} = useFileServices();  
+
 const {
   studentUploads,
   isLoadingUploads,
@@ -50,6 +48,11 @@ const indexOfLastStudent = currentPage * studentsPerPage;
 const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
 const currentStudents = students.slice(indexOfFirstStudent, indexOfLastStudent); 
 const navigate = useNavigate();
+const [itemsPerPage, setItemsPerPage] = useState(5);
+const indexOfLastItem = currentPage * itemsPerPage;
+const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+const currentStudentUploads = studentUploads?.slice(indexOfFirstItem, indexOfLastItem);
+const totalPagesStudentUploads = Math.ceil(currentStudentUploads?.length / itemsPerPage);
 
   // 🔹 Gestion des boutons de pagination
   const nextPage = () => setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
@@ -537,58 +540,94 @@ const handleFileUploadTeacher = (e) => {
               </div>
 
               {/* Liste des fichiers des etudiants */}
-              <h2 className="card-title text-accent mt-6">Fichiers des étudiants</h2>
-              <div className="overflow-x-auto">
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th>#ID</th>
-                      <th>Nom</th>
-                      <th>Date</th>
-                      {/* <th>Professeur</th> */}
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  {studentUploads && studentUploads.length > 0 ? (
-                    studentUploads.map(file => (
-                      <tr key={file.id}>
-                        <td>
-                          <div className="flex items-center">
-                            <FiFile className="mr-2" />
-                            {file.id}
-                          </div>
-                        </td>
-                        <td>{file.student_name}</td>
-                        <td>{new Date(file.uploaded_at).toLocaleDateString() || "N/A"}</td>
-                        <td>
-                          <a
-                            href={file.pdf_file}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn btn-xs btn-success"
+              {user?.role === "teacher" && (
+                <div className="card bg-base-100 shadow-xl">
+                <div className="card-body">
+                  <h2 className="card-title text-accent mt-6">Fichiers des étudiants</h2>
+                    <div className="ml-auto flex items-center gap-2">
+                          <select 
+                            className="select select-sm select-bordered"
+                            value={itemsPerPage}
+                            onChange={(e) => setItemsPerPage(Number(e.target.value))}
                           >
-                            <FiDownload />
-                          </a>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="4" className="text-center text-gray-500">
-                        Aucun fichier disponible.
-                      </td>
-                    </tr>
-                  )}
-
-                  </tbody>
-                </table>
-              </div>
+                            <option value={5}>5 éléments</option>
+                            <option value={10}>10 éléments</option>
+                            <option value={20}>20 éléments</option>
+                          </select>
+                      </div>
+                  <div className="overflow-x-auto">
+                    <table className="table">
+                      <thead>
+                        <tr>
+                          <th>#ID</th>
+                          <th>Nom</th>
+                          <th>Date</th>
+                          {/* <th>Professeur</th> */}
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {currentStudentUploads && currentStudentUploads.length > 0 ? (
+                        currentStudentUploads.map(file => (
+                          <tr key={file.id}>
+                            <td>
+                              <div className="flex items-center">
+                                <FiFile className="mr-2" />
+                                {file.id}
+                              </div>
+                            </td>
+                            <td>{file.student_name}</td>
+                            <td>{new Date(file.uploaded_at).toLocaleDateString() || "N/A"}</td>
+                            <td>
+                              <a
+                                href={file.pdf_file}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="btn btn-xs btn-success"
+                              >
+                                <FiDownload />
+                              </a>
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="4" className="text-center text-gray-500">
+                            Aucun fichier disponible.
+                          </td>
+                        </tr>
+                      )}
+  
+                      </tbody>
+                    </table>
+                    <div className="flex justify-end mt-4 gap-2">
+                        <button
+                          className="btn btn-sm"
+                          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                          disabled={currentStudentUploads === 1}
+                        >
+                          Précédent
+                        </button>
+                        <span className="text-sm flex items-center">
+                          Page {currentPage} / {totalPages}
+                        </span>
+                        <button
+                          className="btn btn-sm"
+                          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                          disabled={currentPage === totalPages}
+                        >
+                          Suivant
+                        </button>
+                      </div>
+                  </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
           {/* Section discussion */}
-          <div className="card bg-base-100 shadow-sm shadow-accent">
+          {/* <div className="card bg-base-100 shadow-sm shadow-accent">
             <div className="card-body">
               <h2 className="card-title text-accent">Discussion</h2>
               <form onSubmit={handleSendMessage} className="flex gap-2">
@@ -602,7 +641,7 @@ const handleFileUploadTeacher = (e) => {
                 <button type="submit" className="btn btn-accent">Envoyer</button>
               </form>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

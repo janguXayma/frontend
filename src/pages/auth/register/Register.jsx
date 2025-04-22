@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
-import janguXayma from "../../../assets/janguXayma.png";
+// import janguXayma from "../../../assets/janguXayma.png";
+import janguXayma from "../../../assets/logo.png";
 import AuthContext from '../../../context/Authcontext';
 import GoogleRegisterComponent from '../google/GoogleRegisterComponent';
 
@@ -33,7 +34,7 @@ const Register = () => {
             <div className="max-w-md w-full space-y-6">
               {/* Logo */}
               <div className="text-center">
-                <span className="text-4xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+                <span className="text-4xl font-bold bg-gradient-to-r from-teal-200 to-teal-700 bg-clip-text text-transparent">
                 janguXayma
                 </span>
                 <p className="mt-2 text-gray-600">Créer un compte en quelques clics 🚀</p>
@@ -44,7 +45,7 @@ const Register = () => {
     
                 {/* Champ Email */}
                 <div>
-                  <label className="w-full input input-bordered input-secondary flex items-center gap-2">
+                  <label className="w-full input input-bordered input-accent flex items-center gap-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 16 16"
@@ -67,7 +68,7 @@ const Register = () => {
                 </div>
                 {/* Champ Rôle */}
                 <div>
-                  <label className="w-full input input-bordered input-info flex items-center gap-2">
+                  <label className="w-full input input-bordered input-accent flex items-center gap-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 16 16"
@@ -91,7 +92,7 @@ const Register = () => {
                 </div>
                 {/* Champ Mot de passe */}
                 <div>
-                  <label className="w-full input input-bordered input-primary flex items-center gap-2">
+                  <label className="w-full input input-bordered input-accent flex items-center gap-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 16 16"
@@ -117,7 +118,7 @@ const Register = () => {
                 </div>
                   {/* Confirm Champ Mot de passe */}
                                 <div>
-                  <label className="w-full input input-bordered input-primary flex items-center gap-2">
+                  <label className="w-full input input-bordered input-accent flex items-center gap-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 16 16"
@@ -146,7 +147,7 @@ const Register = () => {
                 <div>
                   <button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-2 px-4 rounded-lg hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200"
+                    className="w-full bg-gradient-to-r from-teal-200 to-teal-700 text-white py-2 px-4 rounded-lg hover:bg-gradient-to-r hover:from-teal-600 hover:to-teal-800 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200"
                     disabled={registerMutation.isPending}
                   >
                     {registerMutation.isPending ? 'Chargement...' : 'Créer un compte'}
@@ -169,7 +170,7 @@ const Register = () => {
           </div>
     
           {/* Partie droite : Design coloré avec image et texte */}
-          <div className="w-full lg:w-1/2 bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center p-8">
+          <div className="w-full lg:w-1/2 bg-gradient-to-r from-teal-200 to-teal-700 flex items-center justify-center p-8">
             <div className="text-center text-white max-w-md">
               <h2 className="text-4xl font-bold mb-4">
                 Bienvenue sur <span className="underline">janguXayma</span>
