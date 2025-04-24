@@ -104,13 +104,12 @@ const handleFileUpload = (e) => {
 
     uploadFile.mutate(formData, {
       onSuccess: (data) => {
-        console.log("✅ Résultat du backend :", data);
-        if (data?.id) {
-          extractText.mutate(data.id);
-        } else {
-          console.warn("⚠️ Aucun ID reçu !");
-          showAlert("Aucun ID retourné", "warning");
-        }
+        // if (data?.id) {
+        //   extractText.mutate(data.id);
+        // } else {
+        //   console.warn("⚠️ Aucun ID reçu !");
+        //   showAlert("Aucun ID retourné", "warning");
+        // }
       }
     });
     
@@ -118,6 +117,21 @@ const handleFileUpload = (e) => {
     e.target.reset();
   }
 };
+const handleExtractText = (fileId) => {
+  extractText.mutate(fileId, {
+    onSuccess: (data) => {
+      if (data?.extracted_text) {
+        setExtractedText(data.extracted_text);
+      } else {
+        console.warn("⚠️ Aucun texte extrait !");
+        // showAlert("Aucun texte extrait", "warning");
+      }
+    },
+    onError: () => {
+      showAlert("Erreur lors de l'extraction du texte", "error");
+    }
+  });
+}
 
 const handleFileUploadTeacher = (e) => {
   e.preventDefault();
@@ -517,12 +531,17 @@ const handleFileUploadTeacher = (e) => {
                                 <FiDownload />
                               </a>
                               {user?.role === "teacher" && (
-                                <button 
+                                <div className="">
+                                  <button 
                                   className="btn btn-xs btn-error" 
                                   onClick={() => handleRemoveFile(file.id)}
                                 >
                                   <FiTrash2 />
                                 </button>
+                                <button className="btn btn-xs btn-primary mx-2" onClick={() => handleExtractText(file.id)}>
+                                  <FiUpload />
+                                </button>
+                                </div>
                               )}
                             </div>
                           </td>
@@ -587,6 +606,9 @@ const handleFileUploadTeacher = (e) => {
                               >
                                 <FiDownload />
                               </a>
+                              <button className="btn btn-xs btn-primary mx-2" onClick={() => handleExtractText(file.id)}>
+                                  <FiUpload />
+                                </button>
                             </td>
                           </tr>
                         ))
